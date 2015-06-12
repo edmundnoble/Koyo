@@ -17,7 +17,7 @@ class LoginActivity extends ActionBarActivity {
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
     // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_login, menu)
+    getMenuInflater.inflate(R.menu.menu_login, menu)
     true
   }
 
