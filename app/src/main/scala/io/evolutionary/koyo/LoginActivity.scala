@@ -1,18 +1,19 @@
 package io.evolutionary.koyo
 
-;
+import android.support.v7.app.AppCompatActivity
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 
+class LoginActivity extends AppCompatActivity {
 
-class LoginActivity extends ActionBarActivity {
+  implicit var httpClient = _
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
+    httpClient = Jobmine.makeUnsafeClient
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
