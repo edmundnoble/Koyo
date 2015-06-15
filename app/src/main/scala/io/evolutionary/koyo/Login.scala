@@ -13,6 +13,29 @@ import Scalaz._
 
 object Login {
 
+  sealed trait LoginStatus
+
+  case object LoggedIn extends LoginStatus
+
+  case object Offline extends LoginStatus
+
+  case object LoggedOut extends LoginStatus
+
+  // Login constants
+  val FAILED_LOGIN_STRING = "Signin HTML for JobMine."
+
+  val LOGIN_OFFLINE_MESSAGE = "Invalid signon time for user"
+
+  val DEFAULT_HTML_ENCODER = "UTF-8"
+
+  val FAILED_URL = "Invalid URL - no Node found in"
+
+  val LOGIN_READ_LENGTH = 400
+
+  val LOGIN_ERROR_MSG_SKIP = 3200
+
+  val MAX_LOGIN_ATTEMPTS = 3
+
   val client = new OkHttpClient()
   type OkCallback = (Throwable \/ Response) => Unit
 
@@ -35,12 +58,13 @@ object Login {
       val call = client.newCall(request)
       call.enqueue(new Callback() {
         override def onFailure(request: Request, e: IOException): Unit = cb(e.left[Response])
+
         override def onResponse(response: Response): Unit = cb(response.right[Throwable])
       })
     }
   }
 
-  def login(username: String, password: String): Task[Response] = {
+  def login(username: String, password: String): Task[LoginStatus] = {
     val encoding = new FormEncodingBuilder()
       .add("submit", "Submit")
       .add("timezoneOffset", "480")
@@ -52,7 +76,19 @@ object Login {
       .url(Links.Login)
       .post(encoding)
       .build()
-    asyncRequest(request)
+    asyncRequest(request) map { loginResponse =>
+      val respString = loginResponse.body().string()
+      if (respString contains FAILED_LOGIN_STRING) {
+        if (respString contains LOGIN_OFFLINE_MESSAGE) {
+          Offline
+        } else {
+          LoggedOut
+        }
+      } else {
+        LoggedIn
+      }
+    }
+
   }
 
 }
