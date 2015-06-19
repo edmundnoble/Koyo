@@ -9,7 +9,7 @@ import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
 
-import scala.concurrent.Future
+import scala.concurrent.{Promise, Future}
 import scalaz.concurrent.{Strategy, Task}
 import java.io.IOException
 import scalaz._
@@ -35,43 +35,42 @@ object Jobmine {
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {
     Log.d("Jobmine", "Making an asyncRequest...")
     Task.async { cb: OkCallback =>
-      Log.d("Jobmine", "asyncRequest task running...")
       val userAgentSetRequest = request
       val call = client.newCall(request)
+      Log.d("Jobmine", "asyncRequest task running...")
       call.enqueue(new Callback() {
-        override def onFailure(request: Request, e: IOException) = cb(e.left[Response])
-
-        override def onResponse(response: Response) = cb(response.right[Throwable])
+        override def onFailure(request: Request, e: IOException) = cb(-\/(e))
+        override def onResponse(response: Response) = cb(\/-(response))
       })
     }
   }
 
-  def makeUnsafeClient(): OkHttpClient = {
-    val okHttpClient = new OkHttpClient()
-    try {
-      val trustAllCerts = Array[TrustManager](
-        new X509TrustManager() {
-          override def checkClientTrusted(chain: Array[X509Certificate], authType: String) = ()
+    def makeUnsafeClient(): OkHttpClient = {
+      val okHttpClient = new OkHttpClient()
+      try {
+        val trustAllCerts = Array[TrustManager](
+          new X509TrustManager() {
+            override def checkClientTrusted(chain: Array[X509Certificate], authType: String) = ()
 
-          override def checkServerTrusted(chain: Array[X509Certificate], authType: String) = ()
+            override def checkServerTrusted(chain: Array[X509Certificate], authType: String) = ()
 
-          override def getAcceptedIssuers = null
-        }
-      )
+            override def getAcceptedIssuers = null
+          }
+        )
 
-      // Install the all-trusting trust manager
-      val sslContext = SSLContext.getInstance("SSL")
-      sslContext.init(null, trustAllCerts, new java.security.SecureRandom())
-      // Create an ssl socket factory with our all-trusting manager
-      val sslSocketFactory = sslContext.getSocketFactory
-      okHttpClient.setSslSocketFactory(sslSocketFactory)
-      okHttpClient.setHostnameVerifier(new HostnameVerifier() {
-        override def verify(hostname: String, session: SSLSession) = true
-      })
-    } catch {
-      case _: GeneralSecurityException =>
+        // Install the all-trusting trust manager
+        val sslContext = SSLContext.getInstance("SSL")
+        sslContext.init(null, trustAllCerts, new java.security.SecureRandom())
+        // Create an ssl socket factory with our all-trusting manager
+        val sslSocketFactory = sslContext.getSocketFactory
+        okHttpClient.setSslSocketFactory(sslSocketFactory)
+        okHttpClient.setHostnameVerifier(new HostnameVerifier() {
+          override def verify(hostname: String, session: SSLSession) = true
+        })
+      } catch {
+        case _: GeneralSecurityException =>
+      }
+      okHttpClient
     }
-    okHttpClient
-  }
 
-}
+  }

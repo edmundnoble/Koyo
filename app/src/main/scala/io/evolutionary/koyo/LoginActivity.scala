@@ -1,5 +1,7 @@
 package io.evolutionary.koyo
 
+import java.net.UnknownHostException
+
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
@@ -8,6 +10,7 @@ import android.view.{View, Menu, MenuItem}
 import android.widget.{EditText, Toast, Button, TextView}
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.Login._
+import scalaz._
 import scalaz.concurrent.{Task, Promise}
 
 class LoginActivity extends AppCompatActivity {
@@ -26,7 +29,7 @@ class LoginActivity extends AppCompatActivity {
 
     loginButton.setOnClickListener(
       (_: View) =>
-        Login.login(usernameField.getString, passwordField.getString).flatMap(parseLoginStatus).attemptRun
+        Login.login(usernameField.getString, passwordField.getString).runAsync(parseLoginStatus)
     )
   }
 
@@ -36,16 +39,24 @@ class LoginActivity extends AppCompatActivity {
     true
   }
 
-  private def parseLoginStatus(status: LoginStatus): Task[Unit] = Task.delay {
-    Log.d("LoginActivity", s"Parsing login status $status")
-    status match  {
-      case LoggedIn =>
-      case LoggedOut =>
-        Toast.makeText(this, "Your credentials are shite!", Toast.LENGTH_SHORT).show()
-      case Offline =>
-        Toast.makeText(this, "Jobmine is offline! Please try again later.", Toast.LENGTH_SHORT).show()
+  private def parseLoginStatus(statusOrErr: Throwable \/ LoginStatus): Unit = runOnUiThread {
+    statusOrErr match {
+      case \/-(status) => status match {
+        case LoggedIn =>
+          Toast.makeText(this, "You're logged in now!", Toast.LENGTH_SHORT).show()
+        case LoggedOut =>
+          Toast.makeText(this, "Your credentials are shite!", Toast.LENGTH_SHORT).show()
+        case Offline =>
+          Toast.makeText(this, "Jobmine is offline! Please try again later.", Toast.LENGTH_SHORT).show()
+      }
+      case -\/(err) => err match {
+        case ex: UnknownHostException =>
+          Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
+        case e: Exception =>
+          Log.e("LoginActivity", s"Error logging in: \n${err.stackTraceAsString}")
+      }
     }
-  }.ui
+  }
 
   @Override
   override def onOptionsItemSelected(item: MenuItem): Boolean = {

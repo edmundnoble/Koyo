@@ -12,9 +12,11 @@ import com.squareup.okhttp.Response
 
 import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
+import scala.util.Try
 import scalaz.concurrent.{Task, Strategy}
 import scalaz._
 import Scalaz._
+import java.io.{PrintWriter, StringWriter}
 
 package object koyo {
   type OkCallback = (Throwable \/ Response) => Unit
@@ -47,22 +49,36 @@ package object koyo {
     })
   }
 
+  implicit def DisToTry[T](d: Throwable \/ T): Try[T] = d match {
+    case -\/(ex) => Try(throw ex)
+    case \/-(res) => Try(res)
+  }
+
   implicit class TaskOnBackgroundThread[T](val t: Task[T]) extends AnyVal {
     def bg: Task[T] = Task.async[T] { cb =>
       if (!onMainThread) {
         cb(t.attemptRun)
-      }
-      else {
+      } else {
         val task = new AsyncTask[AnyRef, Void, AnyRef] {
           // This looks weird, doesn't it? Thanks to SI-1459 (and maybe another bug),
           // everything here has to be AnyRef.
-          override def doInBackground(paramses: AnyRef*): AnyRef = { Log.d("Package", "Doing something in the background..."); t.attemptRun }
-
-          override def onPostExecute(result: AnyRef): Unit = { Log.d("Package", "Finished doing something in the background..."); cb(result.asInstanceOf[Throwable \/ T]) }
+          override def doInBackground(paramses: AnyRef*): AnyRef = { Log.d("Package", "Doing something in the background..."); cb(t.attemptRun); null }
 
           override def onCancelled(): Unit = cb(new RuntimeException().left[T])
         }.execute()
       }
+    }
+  }
+  implicit val ec = new ExecutionContext() {
+    override def execute(runnable: Runnable): Unit = runnable.run()
+    override def reportFailure(cause: Throwable): Unit = cause.printStackTrace()
+  }
+
+  implicit class ExceptionWithStackTrace(val ex: Throwable) extends AnyVal {
+    def stackTraceAsString: String = {
+      val sw = new StringWriter()
+      ex.printStackTrace(new PrintWriter(sw))
+      sw.toString
     }
   }
 
