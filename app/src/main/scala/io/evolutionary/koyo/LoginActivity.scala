@@ -3,19 +3,18 @@ package io.evolutionary.koyo
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.{View, Menu, MenuItem}
-import android.widget.{Toast, Button, TextView}
+import android.widget.{EditText, Toast, Button, TextView}
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.Login._
-import scalaz._
-import Scalaz._
 import scalaz.concurrent.{Task, Promise}
 
 class LoginActivity extends AppCompatActivity {
 
   implicit var httpClient: OkHttpClient = _
-  lazy val usernameField = getView[TextView](R.id.usernameField)
-  lazy val passwordField = getView[TextView](R.id.passwordField)
+  lazy val usernameField = getView[EditText](R.id.usernameField)
+  lazy val passwordField = getView[EditText](R.id.passwordField)
   lazy val loginButton = getView[Button](R.id.loginButton)
 
   private def getView[T <: View](id: Int): T = findViewById(id).asInstanceOf[T]
@@ -27,7 +26,7 @@ class LoginActivity extends AppCompatActivity {
 
     loginButton.setOnClickListener(
       (_: View) =>
-        Login.login(usernameField.getString, passwordField.getString).bg.flatMap(parseLoginStatus).attemptRun
+        Login.login(usernameField.getString, passwordField.getString).flatMap(parseLoginStatus).attemptRun
     )
   }
 
@@ -38,7 +37,8 @@ class LoginActivity extends AppCompatActivity {
   }
 
   private def parseLoginStatus(status: LoginStatus): Task[Unit] = Task.delay {
-    status match {
+    Log.d("LoginActivity", s"Parsing login status $status")
+    status match  {
       case LoggedIn =>
       case LoggedOut =>
         Toast.makeText(this, "Your credentials are shite!", Toast.LENGTH_SHORT).show()

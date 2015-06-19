@@ -4,6 +4,7 @@ import java.net.URL
 import java.security.GeneralSecurityException
 import javax.net.ssl.SSLContext
 
+import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
 
@@ -33,6 +34,7 @@ object Login {
   val MAX_LOGIN_ATTEMPTS = 3
 
   def login(username: String, password: String)(implicit client: OkHttpClient): Task[LoginStatus] = {
+    Log.d("Login", "Logging in...")
     val encoding = new FormEncodingBuilder()
       .add("submit", "Submit")
       .add("timezoneOffset", "480")

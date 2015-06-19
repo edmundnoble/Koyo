@@ -15,7 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
--dontoptimize
+-optimizationpasses 5
 -dontobfuscate
 -dontpreverify
 -dontwarn scala.**

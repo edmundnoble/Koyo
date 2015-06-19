@@ -5,6 +5,7 @@ import java.security.GeneralSecurityException
 import javax.net.ssl._
 import java.security.cert.X509Certificate
 
+import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
 
@@ -32,7 +33,9 @@ object Jobmine {
 
 
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {
+    Log.d("Jobmine", "Making an asyncRequest...")
     Task.async { cb: OkCallback =>
+      Log.d("Jobmine", "asyncRequest task running...")
       val userAgentSetRequest = request
       val call = client.newCall(request)
       call.enqueue(new Callback() {

@@ -11,10 +11,11 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -41,4 +42,5 @@ dependencies {
     compile "org.scalaz.stream:scalaz-stream_2.11:0.7.1a"
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.mimecraft:mimecraft:1.1.1'
+    compile "com.android.support:multidex:1.0.1"
 }
