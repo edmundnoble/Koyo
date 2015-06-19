@@ -43,7 +43,7 @@ object Jobmine {
     }
   }
 
-  def makeUnsafeClient: OkHttpClient = {
+  def makeUnsafeClient(): OkHttpClient = {
     val okHttpClient = new OkHttpClient()
     try {
       val trustAllCerts = Array[TrustManager](

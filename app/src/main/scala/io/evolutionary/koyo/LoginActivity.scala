@@ -3,17 +3,32 @@ package io.evolutionary.koyo
 import android.support.v7.app.AppCompatActivity
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.{View, Menu, MenuItem}
+import android.widget.{Toast, Button, TextView}
+import com.squareup.okhttp.OkHttpClient
+import io.evolutionary.koyo.Login._
+import scalaz._
+import Scalaz._
+import scalaz.concurrent.{Task, Promise}
 
 class LoginActivity extends AppCompatActivity {
 
-  implicit var httpClient = _
+  implicit var httpClient: OkHttpClient = _
+  lazy val usernameField = getView[TextView](R.id.usernameField)
+  lazy val passwordField = getView[TextView](R.id.passwordField)
+  lazy val loginButton = getView[Button](R.id.loginButton)
+
+  private def getView[T <: View](id: Int): T = findViewById(id).asInstanceOf[T]
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
-    httpClient = Jobmine.makeUnsafeClient
+    httpClient = Jobmine.makeUnsafeClient()
+
+    loginButton.setOnClickListener(
+      (_: View) =>
+        Login.login(usernameField.getString, passwordField.getString).bg.flatMap(parseLoginStatus).attemptRun
+    )
   }
 
   override def onCreateOptionsMenu(menu: Menu): Boolean = {
@@ -21,6 +36,16 @@ class LoginActivity extends AppCompatActivity {
     getMenuInflater.inflate(R.menu.menu_login, menu)
     true
   }
+
+  private def parseLoginStatus(status: LoginStatus): Task[Unit] = Task.delay {
+    status match {
+      case LoggedIn =>
+      case LoggedOut =>
+        Toast.makeText(this, "Your credentials are shite!", Toast.LENGTH_SHORT).show()
+      case Offline =>
+        Toast.makeText(this, "Jobmine is offline! Please try again later.", Toast.LENGTH_SHORT).show()
+    }
+  }.ui
 
   @Override
   override def onOptionsItemSelected(item: MenuItem): Boolean = {
