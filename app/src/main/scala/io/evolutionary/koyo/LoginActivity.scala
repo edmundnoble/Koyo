@@ -31,45 +31,21 @@ class LoginActivity extends AppCompatActivity {
     httpClient = Jobmine.makeUnsafeClient()
   }
 
-  def onLoginButtonClicked(view: View): Unit = {
+  def onLoginButtonClicked(view: View): Unit =
     Login.login(usernameField.getString, passwordField.getString).runAsync(parseLoginStatus)
-  }
-
-  override def onCreateOptionsMenu(menu: Menu): Boolean = {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater.inflate(R.menu.menu_login, menu)
-    true
-  }
 
   private def parseLoginStatus(statusOrErr: Throwable \/ LoginStatus): Unit = runOnUiThread {
     statusOrErr match {
       case \/-(status) => status match {
-        case LoggedIn =>
-          Toast.makeText(this, "You're logged in now!", Toast.LENGTH_SHORT).show()
-        case LoggedOut =>
-          Toast.makeText(this, "Your credentials are shite!", Toast.LENGTH_SHORT).show()
-        case Offline =>
-          Toast.makeText(this, "Jobmine is offline! Please try again later.", Toast.LENGTH_SHORT).show()
+        case LoggedIn => toast("You're logged in now!", this)
+        case LoggedOut => toast("Your credentials are shite!", this)
+        case Offline => toast("Jobmine is offline! Please try again later.", this)
       }
       case -\/(err) => err match {
-        case ex: UnknownHostException =>
-          Toast.makeText(this, "No internet connection!", Toast.LENGTH_SHORT).show()
-        case e: Exception =>
-          Log.e("LoginActivity", s"Error logging in: \n${err.stackTraceAsString}")
+        case ex: UnknownHostException => toast("No internet connection!", this)
+        case e: Exception => Log.e("LoginActivity", s"Error logging in: \n${err.stackTraceAsString}")
       }
     }
   }
 
-  override def onOptionsItemSelected(item: MenuItem): Boolean = {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    val id = item.getItemId
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings)
-      true
-    else
-      super.onOptionsItemSelected(item)
-  }
 }

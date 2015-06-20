@@ -3,11 +3,12 @@ package io.evolutionary
 import java.util
 import java.util.concurrent._
 
+import android.content.Context
 import android.os.{AsyncTask, Looper, Handler}
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.{EditText, TextView}
+import android.widget.{Toast, EditText, TextView}
 import com.squareup.okhttp.Response
 
 import scala.concurrent.ExecutionContext
@@ -39,6 +40,9 @@ package object koyo {
     else
       block.run()
   }
+
+  def toast(text: String, context: Context): Unit =
+    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 
   def onMainThread: Boolean =
     Looper.myLooper == Looper.getMainLooper
