@@ -17,8 +17,8 @@ import scalaz.concurrent.{Task, Promise}
 class LoginActivity extends BaseActivity {
 
   private implicit var httpClient: OkHttpClient = _
-  lazy val usernameField = getView[EditText](R.id.usernameField)
-  lazy val passwordField = getView[EditText](R.id.passwordField)
+  private lazy val usernameField = getView[EditText](R.id.usernameField)
+  private lazy val passwordField = getView[EditText](R.id.passwordField)
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
