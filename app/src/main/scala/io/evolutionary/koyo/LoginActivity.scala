@@ -14,20 +14,17 @@ import io.evolutionary.koyo.Login._
 import scalaz._
 import scalaz.concurrent.{Task, Promise}
 
-class LoginActivity extends AppCompatActivity {
+class LoginActivity extends BaseActivity {
 
-  implicit var httpClient: OkHttpClient = _
-  lazy val toolbar = getView[Toolbar](R.id.toolbar)
+  private implicit var httpClient: OkHttpClient = _
   lazy val usernameField = getView[EditText](R.id.usernameField)
   lazy val passwordField = getView[EditText](R.id.passwordField)
-
-  private def getView[T <: View](id: Int): T = findViewById(id).asInstanceOf[T]
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
-    setSupportActionBar(toolbar)
-    getSupportActionBar.setDisplayShowTitleEnabled(false)
+    injectToolbar()
+
     httpClient = Jobmine.makeUnsafeClient()
   }
 

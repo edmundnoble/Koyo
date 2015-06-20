@@ -44,3 +44,13 @@ dependencies {
     compile 'com.squareup.mimecraft:mimecraft:1.1.1'
     compile "com.android.support:multidex:1.0.1"
 }
+
+
+tasks.withType(ScalaCompile) {
+    // If you want to use scala compile daemon
+    scalaCompileOptions.useCompileDaemon = true
+    // Suppress deprecation warnings
+    scalaCompileOptions.deprecation = false
+    // Additional parameters
+    scalaCompileOptions.additionalParameters = ["-feature"]
+}

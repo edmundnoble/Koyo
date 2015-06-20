@@ -3,7 +3,8 @@ package io.evolutionary
 import java.util
 import java.util.concurrent._
 
-import android.content.Context
+import android.app.Activity
+import android.content.{Intent, Context}
 import android.os.{AsyncTask, Looper, Handler}
 import android.util.Log
 import android.view.View
@@ -41,6 +42,9 @@ package object koyo {
       block.run()
   }
 
+  def openActivity(current: Activity, destination: Class[_]): Unit =
+    current.startActivity(new Intent(current, destination))
+
   def toast(text: String, context: Context): Unit =
     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 
@@ -66,15 +70,19 @@ package object koyo {
         val task = new AsyncTask[AnyRef, Void, AnyRef] {
           // This looks weird, doesn't it? Thanks to SI-1459 (and maybe another bug),
           // everything here has to be AnyRef.
-          override def doInBackground(paramses: AnyRef*): AnyRef = { Log.d("Package", "Doing something in the background..."); cb(t.attemptRun); null }
+          override def doInBackground(paramses: AnyRef*): AnyRef = {
+            Log.d("Package", "Doing something in the background..."); cb(t.attemptRun); null
+          }
 
           override def onCancelled(): Unit = cb(new RuntimeException().left[T])
         }.execute()
       }
     }
   }
+
   implicit val ec = new ExecutionContext() {
     override def execute(runnable: Runnable): Unit = runnable.run()
+
     override def reportFailure(cause: Throwable): Unit = cause.printStackTrace()
   }
 
