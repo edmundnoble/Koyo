@@ -40,37 +40,38 @@ object Jobmine {
       Log.d("Jobmine", "asyncRequest task running...")
       call.enqueue(new Callback() {
         override def onFailure(request: Request, e: IOException) = cb(-\/(e))
+
         override def onResponse(response: Response) = cb(\/-(response))
       })
     }
   }
 
-    def makeUnsafeClient(): OkHttpClient = {
-      val okHttpClient = new OkHttpClient()
-      try {
-        val trustAllCerts = Array[TrustManager](
-          new X509TrustManager() {
-            override def checkClientTrusted(chain: Array[X509Certificate], authType: String) = ()
+  def makeUnsafeClient(): OkHttpClient = {
+    val okHttpClient = new OkHttpClient()
+    try {
+      val trustAllCerts = Array[TrustManager](
+        new X509TrustManager() {
+          override def checkClientTrusted(chain: Array[X509Certificate], authType: String) = ()
 
-            override def checkServerTrusted(chain: Array[X509Certificate], authType: String) = ()
+          override def checkServerTrusted(chain: Array[X509Certificate], authType: String) = ()
 
-            override def getAcceptedIssuers = null
-          }
-        )
+          override def getAcceptedIssuers = null
+        }
+      )
 
-        // Install the all-trusting trust manager
-        val sslContext = SSLContext.getInstance("SSL")
-        sslContext.init(null, trustAllCerts, new java.security.SecureRandom())
-        // Create an ssl socket factory with our all-trusting manager
-        val sslSocketFactory = sslContext.getSocketFactory
-        okHttpClient.setSslSocketFactory(sslSocketFactory)
-        okHttpClient.setHostnameVerifier(new HostnameVerifier() {
-          override def verify(hostname: String, session: SSLSession) = true
-        })
-      } catch {
-        case _: GeneralSecurityException =>
-      }
-      okHttpClient
+      // Install the all-trusting trust manager
+      val sslContext = SSLContext.getInstance("SSL")
+      sslContext.init(null, trustAllCerts, new java.security.SecureRandom())
+      // Create an ssl socket factory with our all-trusting manager
+      val sslSocketFactory = sslContext.getSocketFactory
+      okHttpClient.setSslSocketFactory(sslSocketFactory)
+      okHttpClient.setHostnameVerifier(new HostnameVerifier() {
+        override def verify(hostname: String, session: SSLSession) = true
+      })
+    } catch {
+      case _: GeneralSecurityException =>
     }
-
+    okHttpClient
   }
+
+}

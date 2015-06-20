@@ -25,8 +25,8 @@ package object koyo {
     override def run(): Unit = block
   }
 
-  implicit def toOnClickListener[T](block: (View) => T): OnClickListener = new OnClickListener {
-    override def onClick(view: View): Unit = block(view)
+  implicit def toOnClickListener[T](block: => T): OnClickListener = new OnClickListener {
+    override def onClick(view: View): Unit = block
   }
 
   implicit class EditTextWithString(val self: EditText) extends AnyVal {
