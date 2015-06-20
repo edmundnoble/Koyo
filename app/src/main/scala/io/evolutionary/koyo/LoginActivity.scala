@@ -38,7 +38,7 @@ class LoginActivity extends AppCompatActivity {
     statusOrErr match {
       case \/-(status) => status match {
         case LoggedIn => toast("You're logged in now!", this)
-        case LoggedOut => toast("Your credentials are shite!", this)
+        case LoggedOut => toast("Your credentials are invalid!", this)
         case Offline => toast("Jobmine is offline! Please try again later.", this)
       }
       case -\/(err) => err match {
