@@ -1,8 +1,12 @@
 package io.evolutionary.koyo
 
-/**
- * Created by priyeshpatel on 15-06-20.
- */
-class MainActivity {
+import android.os.Bundle
 
+class MainActivity extends BaseActivity {
+
+  protected override def onCreate(savedInstanceState: Bundle): Unit = {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+
+  }
 }
