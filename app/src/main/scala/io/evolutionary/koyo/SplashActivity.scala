@@ -12,12 +12,12 @@ class SplashActivity extends BaseActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash)
 
-    new Handler() postDelayed(toRunnable(afterTimeout()), SPLASH_TIMEOUT)
+    new Handler() postDelayed (afterTimeout(), SPLASH_TIMEOUT)
   }
 
   private def afterTimeout(): Unit = {
-    if (credentialsExist) openActivity(this, classOf[MainActivity])
-    else openActivity(this, classOf[LoginActivity])
+    if (credentialsExist) openActivity(classOf[MainActivity])
+    else openActivity(classOf[LoginActivity])
     finish()
   }
 

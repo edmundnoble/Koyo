@@ -34,12 +34,12 @@ class LoginActivity extends BaseActivity {
   private def parseLoginStatus(statusOrErr: Throwable \/ LoginStatus): Unit = runOnUiThread {
     statusOrErr match {
       case \/-(status) => status match {
-        case LoggedIn => toast("You're logged in now!", this)
-        case LoggedOut => toast("Your credentials are invalid!", this)
-        case Offline => toast("Jobmine is offline! Please try again later.", this)
+        case LoggedIn => toast("You're logged in now!")
+        case LoggedOut => toast("Your credentials are invalid!")
+        case Offline => toast("Jobmine is offline! Please try again later.")
       }
       case -\/(err) => err match {
-        case ex: UnknownHostException => toast("No internet connection!", this)
+        case ex: UnknownHostException => toast("No internet connection!")
         case e: Exception => Log.e("LoginActivity", s"Error logging in: \n${err.stackTraceAsString}")
       }
     }

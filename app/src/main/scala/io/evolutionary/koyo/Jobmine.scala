@@ -31,11 +31,22 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
+  object InterviewType {
+    val InPerson = "In Person"
+    val Video = "Video"
+    val Phone = "Phone"
+    val Group = "Group"
+    val Webcam = "Webcam"
+    val Special = "Special"
+    val Cancelled = "Cancelled"
+  }
+
+
+
 
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {
     Log.d("Jobmine", "Making an asyncRequest...")
     Task.async { cb: OkCallback =>
-      val userAgentSetRequest = request
       val call = client.newCall(request)
       Log.d("Jobmine", "asyncRequest task running...")
       call.enqueue(new Callback() {
