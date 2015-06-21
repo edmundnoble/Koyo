@@ -5,6 +5,10 @@ android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+    }
+
     defaultConfig {
         applicationId "io.evolutionary.koyo"
         minSdkVersion 15
@@ -40,6 +44,7 @@ dependencies {
     compile "org.scala-lang:scala-library:2.11.6"
     compile 'org.scalaz:scalaz-core_2.11:7.1.2'
     compile "org.scalaz.stream:scalaz-stream_2.11:0.7.1a"
+    compile "net.ruippeixotog:scala-scraper_2.11:0.1.1"
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile 'com.squareup.mimecraft:mimecraft:1.1.1'
     compile "com.android.support:multidex:1.0.1"
