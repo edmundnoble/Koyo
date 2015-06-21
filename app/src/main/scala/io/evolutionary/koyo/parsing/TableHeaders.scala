@@ -2,14 +2,6 @@ package io.evolutionary.koyo.parsing
 
 object TableHeaders {
 
-  val AllApplicationsTableId = "UW_CO_APPS_VW2$scrolli$0"
-  val ShortListTableId = "UW_CO_STUJOBLST$scrolli$0"
-  val JobSearchTableId = "UW_CO_JOBRES_VW$scroll$0"
-  val InterviewTableId = "UW_CO_STUD_INTV$scroll$0"
-  val InterviewGroupTableId = "UW_CO_GRP_STU_V$scroll$0"
-  val InterviewSpecialTableId = "UW_CO_NSCHD_JOB$scroll$0"
-  val InterviewCancelledTableId = "UW_CO_SINT_CANC$scroll$0"
-
   object Common {
     val JobId = ("job id", "Job ID")
     val JobTitle = ("job title", "Job Title")

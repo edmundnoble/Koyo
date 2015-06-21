@@ -16,17 +16,18 @@ object HtmlParser {
       for {
         origTable <- htmlParsed.getElementsByClass(tableCSSClass).find(_.id() == tableName) // There are TWO tables with the same ID. So filter them out by class first.
         tbody <- origTable >?> extractor("tbody", element) // Table body
-        tr <- tbody >?> extractor("tr", elements)
-        td <- tr >?> extractor("td", element) // Got to get the last tr, because the first is yet another header
-        realTable <- td >?> extractor("table", element) // New table
-        realTBody <- realTable >?> extractor("tbody", element) // New body
-        rowElements <- realTBody >?> extractor("tr", elements) // Rows
-        columnHeaders <- rowElements.head >?> extractor("th", elements) // Column headers are always the first row in the table.
-        rows = rowElements.tail.map(_ >> extractor("td", texts)) // Actual rows.
+        tr <- tbody >?> extractor("tr", elements) // Et cetera.
+        td <- tr >?> extractor("td", element)
+        realTable <- td >?> extractor("table", element) // Yo dawg, I heard you like tables
+        realTBody <- realTable >?> extractor("tbody", element)
+        rowElements <- realTBody >?> extractor("tr", elements) // The row HTML elements.
+        (headerRowElem +: realRowElems) = rowElements.toVector // The first is the headers, the rest is the actual rows.
+        columnHeaders <- headerRowElem >?> extractor("th", texts)
+        rows = realRowElems.map(_ >> extractor("td", texts))
       } yield (columnHeaders, rows)
     parseResult map {
       case (headers, rows) =>
-        rows.map(row => headers.map(_.text).zip(row).toMap)
+        rows.map(row => headers.zip(row).toMap)
     }
   }
 }
