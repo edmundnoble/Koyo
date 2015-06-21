@@ -1,18 +1,17 @@
-package io.evolutionary.koyo
+package io.evolutionary.koyo.ui
 
-import android.os.{Handler, Bundle}
-import android.preference.PreferenceManager
+import android.os.{Bundle, Handler}
+import io.evolutionary.koyo.{Keys, Preferences, R}
 
 class SplashActivity extends BaseActivity {
 
   private val SPLASH_TIMEOUT = 2000
-  private lazy val preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash)
 
-    new Handler() postDelayed (afterTimeout(), SPLASH_TIMEOUT)
+    new Handler() postDelayed(afterTimeout(), SPLASH_TIMEOUT)
   }
 
   private def afterTimeout(): Unit = {
@@ -22,7 +21,7 @@ class SplashActivity extends BaseActivity {
   }
 
   private def credentialsExist: Boolean =
-    (preferences.getString(Keys.USERNAME, null) != null) &&
-      (preferences.getString(Keys.PASSWORD, null) != null)
+    Preferences.getString(Keys.USERNAME, null) != null &&
+      Preferences.getString(Keys.PASSWORD, null) != null
 
 }

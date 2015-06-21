@@ -1,13 +1,10 @@
-package io.evolutionary.koyo
+package io.evolutionary.koyo.ui
 
-import android.app.Activity
 import android.content.{Context, Intent}
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.widget.Toast
-import com.squareup.okhttp.OkHttpClient
+import io.evolutionary.koyo.R
 
 class BaseActivity extends AppCompatActivity {
 

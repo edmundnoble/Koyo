@@ -1,6 +1,7 @@
-package io.evolutionary.koyo
+package io.evolutionary.koyo.ui
 
 import android.os.Bundle
+import io.evolutionary.koyo.R
 
 class MainActivity extends BaseActivity {
 
