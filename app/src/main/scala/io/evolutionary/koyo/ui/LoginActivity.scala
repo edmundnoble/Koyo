@@ -9,14 +9,17 @@ import android.widget.EditText
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.Login._
 import io.evolutionary.koyo._
+import io.evolutionary.koyo.parsing.TableHeaders
 
 import scalaz._
+import scalaz.concurrent.Task
 
 class LoginActivity extends BaseActivity {
 
   private implicit var httpClient: OkHttpClient = _
   private var username: String = null
   private var password: String = null
+  private var loggingIn = false
   private lazy val usernameField = getView[EditText](R.id.usernameField)
   private lazy val passwordField = getView[EditText](R.id.passwordField)
 
@@ -29,20 +32,22 @@ class LoginActivity extends BaseActivity {
   }
 
   def onLoginButtonClicked(view: View): Unit = {
-    username = usernameField.getString
-    password = passwordField.getString
-    Login.login(username, password).runAsync(parseLoginStatus)
+    if (!loggingIn) {
+      username = usernameField.getString
+      password = passwordField.getString
+      Login.login(username, password).runAsync(parseLoginStatus)
+      loggingIn = true
+    }
   }
 
-  private def parseLoginStatus(statusOrErr: Throwable \/ LoginStatus): Unit = runOnUiThread {
+  private def parseLoginStatus(statusOrErr: Throwable \/ LoginStatus): Unit = runOnMainThread ( () => {
     statusOrErr match {
       case \/-(status) => status match {
-        case LoggedIn => {
+        case LoggedIn =>
           toast("You're logged in now!")
           saveCredentials()
           openActivity(classOf[MainActivity])
           finish()
-        }
         case LoggedOut => toast("Your credentials are invalid!")
         case Offline => toast("Jobmine is offline! Please try again later.")
       }
@@ -51,7 +56,8 @@ class LoginActivity extends BaseActivity {
         case e: Exception => Log.e("LoginActivity", s"Error logging in: \n${err.stackTraceAsString}")
       }
     }
-  }
+    loggingIn = false
+  })
 
   private def saveCredentials(): Unit = {
     Preferences.putString(Keys.USERNAME, username)

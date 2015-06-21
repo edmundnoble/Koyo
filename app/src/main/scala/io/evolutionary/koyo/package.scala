@@ -23,19 +23,21 @@ import java.io.{PrintWriter, StringWriter}
 package object koyo {
   type OkCallback = (Throwable \/ Response) => Unit
 
-  implicit def toRunnable[T](block: => T): Runnable = new Runnable {
-    override def run(): Unit = block
+  implicit def toRunnable[T](block: () => T): Runnable = new Runnable {
+    override def run(): Unit = block()
   }
 
   implicit def toOnClickListener[T](block: => T): OnClickListener = new OnClickListener {
     override def onClick(view: View): Unit = block
   }
 
+  def ignore[A](a: A): Unit = ()
+
   implicit class EditTextWithString(val self: EditText) extends AnyVal {
     def getString = self.getText.toString
   }
 
-  def runOnMainThread(block: Runnable): Unit = {
+  def runOnMainThread[T](block: () => T): Unit = {
     if (!onMainThread)
       new Handler(Looper.getMainLooper) post block
     else
@@ -49,9 +51,7 @@ package object koyo {
     Looper.myLooper == Looper.getMainLooper
 
   implicit class TaskThreadTools[T](val t: Task[T]) extends AnyVal {
-    def ui: Task[Unit] = Task.delay(runOnMainThread {
-      t.run
-    })
+    def ui: Task[Unit] = Task.delay(runOnMainThread(() => t.run))
 
     def bg: Task[T] = Task.async[T] { cb =>
       if (!onMainThread) {

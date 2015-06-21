@@ -1,6 +1,6 @@
 package io.evolutionary.koyo
 
-import java.net.URL
+import java.net.{CookieManager, CookiePolicy, URL}
 import java.security.GeneralSecurityException
 import javax.net.ssl._
 import java.security.cert.X509Certificate
@@ -8,6 +8,7 @@ import java.security.cert.X509Certificate
 import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
+import io.evolutionary.koyo.parsing.HtmlParser
 
 import scala.concurrent.{Promise, Future}
 import scalaz.concurrent.{Strategy, Task}
@@ -41,7 +42,16 @@ object Jobmine {
     val Cancelled = "Cancelled"
   }
 
-
+  def getRowsFromTable(tableId: String, url: URL)(implicit client: OkHttpClient): Task[Option[Seq[Map[String, String]]]] = {
+    val request = new Request.Builder()
+      .url(url)
+      .get()
+      .build()
+    asyncRequest(request) map { response =>
+      val html = response.body().string()
+      HtmlParser.makeRowsFromHtml(tableId, html)
+    }
+  }
 
 
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {
@@ -82,6 +92,10 @@ object Jobmine {
     } catch {
       case _: GeneralSecurityException =>
     }
+    // Jobmine needs cookies
+    val cookieManager = new CookieManager()
+    cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    okHttpClient.setCookieHandler(cookieManager)
     okHttpClient
   }
 

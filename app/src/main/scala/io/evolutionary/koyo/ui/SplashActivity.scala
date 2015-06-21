@@ -1,7 +1,7 @@
 package io.evolutionary.koyo.ui
 
 import android.os.{Bundle, Handler}
-import io.evolutionary.koyo.{Keys, Preferences, R}
+import io.evolutionary.koyo._
 
 class SplashActivity extends BaseActivity {
 
@@ -11,7 +11,7 @@ class SplashActivity extends BaseActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash)
 
-    new Handler() postDelayed(afterTimeout(), SPLASH_TIMEOUT)
+    new Handler().postDelayed(afterTimeout _, SPLASH_TIMEOUT)
   }
 
   private def afterTimeout(): Unit = {

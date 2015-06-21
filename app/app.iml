@@ -96,12 +96,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="cardview-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
-    <orderEntry type="library" exported="" name="scalaz-effect_2.11-7.1.0" level="project" />
-    <orderEntry type="library" exported="" name="scala-parser-combinators_2.11-1.0.4" level="project" />
-    <orderEntry type="library" exported="" name="scala-library-2.11.6" level="project" />
     <orderEntry type="library" exported="" name="scodec-bits_2.11-1.0.6" level="project" />
     <orderEntry type="library" exported="" name="mimecraft-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="jsoup-1.8.1" level="project" />
@@ -111,6 +105,8 @@
     <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="joda-convert-1.2" level="project" />
+    <orderEntry type="library" exported="" name="scalaz-effect_2.11-7.1.0" level="project" />
+    <orderEntry type="library" exported="" name="cardview-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-22.1.1" level="project" />
     <orderEntry type="library" exported="" name="scalaz-concurrent_2.11-7.1.0" level="project" />
     <orderEntry type="library" exported="" name="scala-parser-combinators_2.11-1.0.4" level="project" />
