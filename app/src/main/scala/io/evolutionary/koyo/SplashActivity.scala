@@ -5,7 +5,7 @@ import android.preference.PreferenceManager
 
 class SplashActivity extends BaseActivity {
 
-  private val SPLASH_TIMEOUT = 1500
+  private val SPLASH_TIMEOUT = 2000
   private lazy val preferences = PreferenceManager.getDefaultSharedPreferences(this)
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
