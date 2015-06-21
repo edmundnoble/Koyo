@@ -42,27 +42,17 @@ package object koyo {
       block.run()
   }
 
-  def openActivity(current: Activity, destination: Class[_]): Unit =
-    current.startActivity(new Intent(current, destination))
-
-  def toast(text: String, context: Context): Unit =
+  def toast(text: String)(implicit context: Context): Unit =
     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 
   def onMainThread: Boolean =
     Looper.myLooper == Looper.getMainLooper
 
-  implicit class TaskOnMainThread[T](val t: Task[T]) extends AnyVal {
+  implicit class TaskThreadTools[T](val t: Task[T]) extends AnyVal {
     def ui: Task[Unit] = Task.delay(runOnMainThread {
       t.run
     })
-  }
 
-  implicit def DisToTry[T](d: Throwable \/ T): Try[T] = d match {
-    case -\/(ex) => Try(throw ex)
-    case \/-(res) => Try(res)
-  }
-
-  implicit class TaskOnBackgroundThread[T](val t: Task[T]) extends AnyVal {
     def bg: Task[T] = Task.async[T] { cb =>
       if (!onMainThread) {
         cb(t.attemptRun)
@@ -71,19 +61,15 @@ package object koyo {
           // This looks weird, doesn't it? Thanks to SI-1459 (and maybe another bug),
           // everything here has to be AnyRef.
           override def doInBackground(paramses: AnyRef*): AnyRef = {
-            Log.d("Package", "Doing something in the background..."); cb(t.attemptRun); null
+            Log.d("Package", "Doing something in the background...")
+            cb(t.attemptRun)
+            null
           }
 
           override def onCancelled(): Unit = cb(new RuntimeException().left[T])
         }.execute()
       }
     }
-  }
-
-  implicit val ec = new ExecutionContext() {
-    override def execute(runnable: Runnable): Unit = runnable.run()
-
-    override def reportFailure(cause: Throwable): Unit = cause.printStackTrace()
   }
 
   implicit class ExceptionWithStackTrace(val ex: Throwable) extends AnyVal {
