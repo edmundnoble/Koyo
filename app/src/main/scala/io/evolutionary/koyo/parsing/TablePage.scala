@@ -7,12 +7,13 @@ import android.view.View
 import scalaz._
 import Scalaz._
 
-trait Table {
+trait TablePage {
   type ViewElement <: View
+  type TableType
 
-  def tableName: String
+  def tableNames: Map[TableType, String]
   def url: URL
 
-  def rowToView(map: Map[String, String]): Option[ViewElement]
+  def rowToView(tableType: TableType, map: Map[String, String]): Option[ViewElement]
 }
 

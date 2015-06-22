@@ -5,12 +5,16 @@ import java.net.URL
 import android.view.View
 import io.evolutionary.koyo._
 
-object JobSearchTable extends Table {
-  override def tableName = "UW_CO_JOBRES_VW$scroll$0"
+object JobSearchPage extends TablePage {
+  sealed trait Tables
+  case object JobSearch extends Tables
+  override type TableType = Tables
 
-  type ViewElement = View
+  override def tableNames = Map(JobSearch -> "UW_CO_JOBRES_VW$scroll$0")
+
+  override type ViewElement = View
 
   override def url: URL = Jobmine.Links.JobSearch
 
-  override def rowToView(map: Map[String, String]): Option[ViewElement] = ???
+  override def rowToView(tableType: TableType, map: Map[String, String]): Option[ViewElement] = ???
 }
