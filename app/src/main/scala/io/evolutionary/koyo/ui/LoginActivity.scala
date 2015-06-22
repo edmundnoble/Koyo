@@ -16,7 +16,6 @@ import scalaz.concurrent.Task
 
 class LoginActivity extends BaseActivity {
 
-  private implicit var httpClient: OkHttpClient = _
   private var username: String = null
   private var password: String = null
   private var loggingIn = false
@@ -27,8 +26,6 @@ class LoginActivity extends BaseActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     injectToolbar()
-
-    httpClient = Jobmine.makeUnsafeClient()
   }
 
   def onLoginButtonClicked(view: View): Unit = {

@@ -16,4 +16,3 @@ trait TablePage {
 
   def rowToView(tableType: TableType, map: Map[String, String]): Option[ViewElement]
 }
-

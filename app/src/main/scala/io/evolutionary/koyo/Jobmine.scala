@@ -8,7 +8,7 @@ import java.security.cert.X509Certificate
 import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
-import io.evolutionary.koyo.parsing.HtmlParser
+import io.evolutionary.koyo.parsing.{TablePage, HtmlParser}
 
 import scala.concurrent.{Promise, Future}
 import scalaz.concurrent.{Strategy, Task}
@@ -32,27 +32,21 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
-  object InterviewType {
-    val InPerson = "In Person"
-    val Video = "Video"
-    val Phone = "Phone"
-    val Group = "Group"
-    val Webcam = "Webcam"
-    val Special = "Special"
-    val Cancelled = "Cancelled"
-  }
-
-  def getRowsFromTable(tableId: String, url: URL)(implicit client: OkHttpClient): Task[Option[Seq[Map[String, String]]]] = {
+  def buildTablePageViews(page: TablePage)(implicit client: OkHttpClient): Task[Seq[page.ViewElement]] = {
     val request = new Request.Builder()
-      .url(url)
+      .url(page.url)
       .get()
       .build()
     asyncRequest(request) map { response =>
-      val html = response.body().string()
-      HtmlParser.makeRowsFromHtml(tableId, html)
+      val html = response.body().html
+      page.tableNames.foldLeft(Seq.empty[page.ViewElement]) {
+        case (acc, (tableType, tableName)) =>
+          val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)
+          val viewsMaybe = rowsMaybe.map(rows => rows.flatMap(row => page.rowToView(tableType, row)))
+          acc ++ (viewsMaybe getOrElse Seq.empty[page.ViewElement])
+      }
     }
   }
-
 
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {
     Log.d("Jobmine", "Making an asyncRequest...")

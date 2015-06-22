@@ -10,7 +10,9 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.{Toast, EditText, TextView}
-import com.squareup.okhttp.Response
+import com.squareup.okhttp.{ResponseBody, RequestBody, Response}
+import io.evolutionary.koyo.parsing.HtmlParser
+import org.jsoup.Jsoup
 
 import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
@@ -70,6 +72,10 @@ package object koyo {
         }.execute()
       }
     }
+  }
+
+  implicit class ResponseBodyWithHtml(val body: ResponseBody) {
+    lazy val html = Jsoup.parse(body.string())
   }
 
   implicit class ExceptionWithStackTrace(val ex: Throwable) extends AnyVal {
