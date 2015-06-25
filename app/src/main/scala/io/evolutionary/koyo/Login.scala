@@ -46,7 +46,9 @@ object Login {
       .url(Jobmine.Links.Login)
       .post(encoding)
       .build()
-    Jobmine.asyncRequest(request) map { loginResponse =>
+    if (username == "test") Task.delay(LoggedIn) // DONOTSHIP
+    else Jobmine.asyncRequest(request) map { loginResponse =>
+      Log.d("Login", "Login complete!")
       val respString = loginResponse.body().string()
       if (respString contains FAILED_LOGIN_STRING) {
         if (respString contains LOGIN_OFFLINE_MESSAGE) {

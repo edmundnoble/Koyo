@@ -16,8 +16,6 @@ import scalaz.concurrent.Task
 
 class LoginActivity extends BaseActivity {
 
-  private var username: String = null
-  private var password: String = null
   private var loggingIn = false
   private lazy val usernameField = getView[EditText](R.id.usernameField)
   private lazy val passwordField = getView[EditText](R.id.passwordField)
@@ -30,19 +28,19 @@ class LoginActivity extends BaseActivity {
 
   def onLoginButtonClicked(view: View): Unit = {
     if (!loggingIn) {
-      username = usernameField.getString
-      password = passwordField.getString
-      Login.login(username, password).runAsync(parseLoginStatus)
+      val username = usernameField.getString
+      val password = passwordField.getString
+      Login.login(username, password).runAsync(parseLoginStatus(username, password, _))
       loggingIn = true
     }
   }
 
-  private def parseLoginStatus(statusOrErr: Throwable \/ LoginStatus): Unit = runOnMainThread ( () => {
+  private def parseLoginStatus(username: String, password: String, statusOrErr: Throwable \/ LoginStatus): Unit = runOnMainThread(() => {
     statusOrErr match {
       case \/-(status) => status match {
         case LoggedIn =>
           toast("You're logged in now!")
-          saveCredentials()
+          saveCredentials(username, password)
           openActivity(classOf[MainActivity])
           finish()
         case LoggedOut => toast("Your credentials are invalid!")
@@ -56,7 +54,7 @@ class LoginActivity extends BaseActivity {
     loggingIn = false
   })
 
-  private def saveCredentials(): Unit = {
+  private def saveCredentials(username: String, password: String): Unit = {
     Preferences.putString(Keys.USERNAME, username)
     Preferences.putString(Keys.PASSWORD, password)
   }

@@ -41,6 +41,7 @@ package object koyo {
   }
 
   def runOnMainThread[T](block: () => T): Unit = {
+    println("Trying to run something on the main thread...")
     if (!onMainThread)
       new Handler(Looper.getMainLooper) post block
     else
@@ -49,6 +50,10 @@ package object koyo {
 
   def toast(text: String)(implicit context: Context): Unit =
     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+
+  implicit class GetViewable(val v: View) extends AnyVal {
+    def getView[T <: View](id: Int): T = v.findViewById(id).asInstanceOf[T]
+  }
 
   def onMainThread: Boolean =
     Looper.myLooper == Looper.getMainLooper

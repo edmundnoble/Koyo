@@ -21,8 +21,7 @@ class SplashActivity extends BaseActivity {
     activityStartMs = System.currentTimeMillis()
     credentials.cata({
       case (username, password) =>
-        Login.login(username, password)
-          .runAsync(res => runOnMainThread(() => parseLoginResult(res)))
+        Login.login(username, password).runAsync(res => runOnMainThread(() => parseLoginResult(res)))
     }, {
       startActivityAfterTimeout(classOf[LoginActivity])
     })
@@ -46,12 +45,14 @@ class SplashActivity extends BaseActivity {
       case \/-(res) =>
         res match {
           case Login.LoggedIn =>
+            toast("Logged in!")
             startActivityAfterTimeout(classOf[MainActivity])
           case Login.LoggedOut =>
             toast("There was a problem logging in")
             startActivityAfterTimeout(classOf[LoginActivity])
           case Login.Offline =>
             toast("Jobmine is offline! Please try again later.")
+            startActivityAfterTimeout(classOf[LoginActivity])
         }
     }
   }
