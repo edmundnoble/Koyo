@@ -32,18 +32,21 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
-  def buildTablePageViews(page: TablePage)(implicit client: OkHttpClient): Task[Seq[page.ViewElement]] = {
+  def buildTablePageViews(page: TablePage)(implicit client: OkHttpClient): Task[Option[Seq[page.RowModel]]] = {
     val request = new Request.Builder()
       .url(page.url)
       .get()
       .build()
     asyncRequest(request) map { response =>
       val html = response.body().html
-      page.tableNames.foldLeft(Seq.empty[page.ViewElement]) {
+      page.tableNames.foldLeft(Option(Seq.empty[page.RowModel])) {
         case (acc, (tableType, tableName)) =>
           val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)
-          val viewsMaybe = rowsMaybe.map(rows => rows.flatMap(row => page.rowToView(tableType, row)))
-          acc ++ (viewsMaybe getOrElse Seq.empty[page.ViewElement])
+          val rowsModeled = rowsMaybe.map(rows => page.tableToViews(rows.map(row => (tableType, row))))
+          for {
+            initial <- acc
+            newRows <- rowsModeled
+          } yield initial ++ newRows
       }
     }
   }

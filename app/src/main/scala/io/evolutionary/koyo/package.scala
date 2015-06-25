@@ -1,6 +1,7 @@
 package io.evolutionary
 
 import java.util
+import java.util.Date
 import java.util.concurrent._
 
 import android.app.Activity
@@ -85,5 +86,11 @@ package object koyo {
       sw.toString
     }
   }
+
+  implicit class OptionalStringParsers(val str: String) extends AnyVal {
+    def parseInt: Option[Int] = Try(str.toInt).toOption
+    def parseBool: Option[Boolean] = Try(str.toBoolean).toOption
+  }
+
 
 }

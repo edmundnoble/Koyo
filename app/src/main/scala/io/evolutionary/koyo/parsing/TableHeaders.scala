@@ -1,50 +1,64 @@
 package io.evolutionary.koyo.parsing
+import scalaz._
+import Scalaz._
 
 object TableHeaders {
 
+
   object Common {
-    val JobId = ("job id", "Job ID")
-    val JobTitle = ("job title", "Job Title")
-    val Employer = ("employer", "Employer")
-    val JobStatus = ("job status", "Job Status")
+    val JobId = "Job ID"
+    val JobTitle = "Job Title"
+    val Employer = "Employer"
+    val JobStatus = "Job Status"
   }
 
   object Applications {
-    val Unit = ("unit", "Unit")
-    val Term = ("term", "Term")
-    val AppStatus = ("app. status", "Application Status")
-    val ViewDetails = ("view details", "View Details")
-    val LastDayToApply = ("last day to apply", "Last Day to Apply")
-    val NumApps = ("# apps", "Number of Apps")
-    val ViewPackage = ("view package", "View Package")
+    val Unit = "Unit"
+    val Term = "Term"
+    val AppStatus = "App. Status"
+    val ViewDetails = "View Details"
+    val LastDayToApply = "Last Day to Apply"
+    val NumApps = "# Apps"
+    val ViewPackage = "View Package"
   }
 
   object Interviews {
-    val EmployerName = ("employer name", "Employer")
-    val Date = ("date", "Date")
-    val InterviewType = ("type", "Type")
-    val SelectTime = ("select/view time", "Interview Select Time")
-    val StartTime = ("start time", "Start Time")
-    val EndTime = ("end time", "Finished Time")
-    val Length = ("length", "Length")
-    val Room = ("room", "Room Info")
-    val Instructions = ("instructions", "Instructions")
-    val Interviewer = ("interviewer", "Interviewer")
+    val EmployerName = "Employer"
+    val Date = "Date"
+    val InterviewType = "Type"
+    val SelectTime = "Interview Select Time"
+    val StartTime = "Start Time"
+    val EndTime = "Finished Time"
+    val Length = "Length"
+    val Room = "Room Info"
+    val Instructions = "Instructions"
+    val Interviewer = "Interviewer"
   }
 
   object Shortlist {
-    val JobIdentifier = ("job identifier", "Job ID")
-    val UnitName = ("unit name 1", "Unit")
-    val Location = ("location", "Job Location")
-    val Apply = ("apply", "Application Status")
-    val LastDayToApply = ("last date to apply", "Last Date to Apply")
+    val JobIdentifier = "Job ID"
+    val UnitName = "Unit"
+    val Location = "Job Location"
+    val Apply = "Application Status"
+    val LastDayToApply = "Last Date to Apply"
   }
 
   object JobSearch {
-    val Openings = ("openings", "Openings")
-    val ShortList = ("short list", "Short List")
-    val UnitName = ("unit name", "Unit")
+    val Openings = "Openings"
+    val ShortList = "Short List"
+    val UnitName = "Unit"
   }
 
-  val Blank = ("", "")
+  object Rankings {
+    val EmployerRank = "Rank"
+    val StudentRank = "&nbsp"
+    val Location = "Work location"
+    val WorkTermSupport = "Work Term Supp"
+    val OpenDate = "Open Date"
+    val OpenTime = "Open Time"
+    val CloseDate = "Close Date"
+    val CloseTime = "Close Time"
+  }
+
+  val Blank = ""
 }

@@ -8,11 +8,11 @@ import scalaz._
 import Scalaz._
 
 trait TablePage {
-  type ViewElement <: View
+  type RowModel
   type TableType
 
   def tableNames: Map[TableType, String]
   def url: URL
 
-  def rowToView(tableType: TableType, map: Map[String, String]): Option[ViewElement]
+  def tableToViews(rows: Seq[(TableType, Map[String, String])]): Seq[RowModel]
 }

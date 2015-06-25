@@ -9,7 +9,7 @@ import android.widget.EditText
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.Login._
 import io.evolutionary.koyo._
-import io.evolutionary.koyo.parsing.TableHeaders
+import io.evolutionary.koyo.parsing.{InterviewPage, TableHeaders}
 
 import scalaz._
 import scalaz.concurrent.Task
