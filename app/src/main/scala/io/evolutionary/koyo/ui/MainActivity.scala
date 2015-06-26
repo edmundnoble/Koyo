@@ -1,10 +1,9 @@
 package io.evolutionary.koyo.ui
 
+import android.support.v4.app.{FragmentManager, Fragment}
 import android.os.Bundle
-import android.support.v4.app.{Fragment, FragmentPagerAdapter, FragmentManager}
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
-import android.support.v7.app.ActionBar
-import android.support.v7.widget.Toolbar
 import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout
 import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout.TabColorizer
 import io.evolutionary.koyo.R
