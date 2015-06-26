@@ -15,7 +15,7 @@ import scalaz._
 import Scalaz._
 import scalaz.std.option._
 
-class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model], makeView: (Context, Model) => V) extends BaseFragment {
+class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model, _], makeView: (Context, Model) => V) extends BaseFragment {
   var listView: ListView = _
   var adapter: ModelAdapter[Model, V] = _
   implicit var okHttpClient: OkHttpClient = _

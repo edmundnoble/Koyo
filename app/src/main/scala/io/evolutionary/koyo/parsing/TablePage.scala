@@ -24,10 +24,10 @@ trait TablePage[RowModel, TableType] { self =>
     def tablesToRows(tables: RawTables) = self.tablesToRows(fun(tables))
   }
 
-  def >>>[T](fun: (RowModel => T)) = new TablePage[T, TableType] {
+  def >>>[T](fun: (Seq[RowModel] => Seq[T])) = new TablePage[T, TableType] {
     def tableNames = self.tableNames
     def url = self.url
-    def tablesToRows(tables: RawTables) = self.tablesToRows(tables).map(fun)
+    def tablesToRows(tables: RawTables) = fun(self.tablesToRows(tables))
   }
 
 

@@ -1,5 +1,6 @@
 package io.evolutionary.koyo.ui
 
+import android.content.Context
 import android.support.v4.app.{FragmentManager, Fragment}
 import android.os.Bundle
 import android.support.v4.app.FragmentPagerAdapter
@@ -30,8 +31,10 @@ class MainActivity extends BaseActivity {
 }
 
 object MainPagerAdapter {
+  val makeApplicationView = (context: Context, model: Models.Application) = new ApplicationView(context, model)
   val FragmentsInOrder: Seq[() => Fragment] = Seq(
-    () => new ModelFragment[Models.Application, ApplicationView](ApplicationsPage, (context, model) => new ApplicationView(context, model))
+    () => new ModelFragment(ApplicationsPage, makeApplicationView),
+    () => new ModelFragment(ApplicationsPage >>> (_.filter(_.appStatus == "Active")), makeApplicationView)
   )
   val FragmentTitlesInOrder: Seq[String] = Seq("Applications")
 }
