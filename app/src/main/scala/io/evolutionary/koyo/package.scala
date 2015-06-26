@@ -45,7 +45,7 @@ package object koyo {
     if (!onMainThread)
       new Handler(Looper.getMainLooper) post block
     else
-      block.run()
+      block()
   }
 
   def toast(text: String)(implicit context: Context): Unit =
@@ -56,7 +56,7 @@ package object koyo {
   }
 
   def onMainThread: Boolean =
-    Looper.myLooper == Looper.getMainLooper
+    Looper.myLooper eq Looper.getMainLooper
 
   implicit class TaskThreadTools[T](val t: Task[T]) extends AnyVal {
     def ui: Task[Unit] = Task.delay(runOnMainThread(() => t.run))
@@ -98,6 +98,7 @@ package object koyo {
 
   implicit class OptionalStringParsers(val str: String) extends AnyVal {
     def parseInt: Option[Int] = Try(str.toInt).toOption
+
     def parseBool: Option[Boolean] = Try(str.toBoolean).toOption
   }
 

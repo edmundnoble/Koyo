@@ -4,20 +4,18 @@ import java.net.URL
 
 import io.evolutionary.koyo._
 
-object RankingsPage extends TablePage {
+object RankingsPage extends TablePage[Models.Ranking] {
 
   sealed trait Tables
 
   case object RankingsTable extends Tables
-
-  override type RowModel = Models.Ranking
   override type TableType = Tables
 
   override def tableNames: Map[TableType, String] = Map(RankingsTable -> "UW_CO_STU_RNKV2$scroll$0")
 
   override def url: URL = Jobmine.Links.Rankings
 
-  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[RowModel] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[Models.Ranking] = {
     import TableHeaders._
     val rankings = tables.values.flatMap(_.map { row =>
         for {

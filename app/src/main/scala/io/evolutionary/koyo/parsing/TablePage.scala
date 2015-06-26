@@ -7,8 +7,7 @@ import android.view.View
 import scalaz._
 import Scalaz._
 
-trait TablePage {
-  type RowModel
+trait TablePage[RowModel] {
   type TableType
 
   def tableNames: Map[TableType, String]

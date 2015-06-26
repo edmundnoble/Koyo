@@ -6,9 +6,7 @@ import android.view.View
 import io.evolutionary.koyo.Jobmine
 import io.evolutionary.koyo._
 
-object ApplicationsPage extends TablePage {
-  override type RowModel = Models.Application
-
+object ApplicationsPage extends TablePage[Models.Application] {
   sealed trait Tables
 
   case object AllApps extends Tables
@@ -24,7 +22,7 @@ object ApplicationsPage extends TablePage {
 
   override def url: URL = Jobmine.Links.Applications
 
-  override def tablesToRows(rows: Map[TableType, Seq[Map[String, String]]]): Seq[RowModel] = {
+  override def tablesToRows(rows: Map[TableType, Seq[Map[String, String]]]): Seq[Models.Application] = {
     import TableHeaders._
     val filteredRows = rows.getOrElse(AllApps, Seq.empty[Map[String, String]])
     val applications = filteredRows map { row =>

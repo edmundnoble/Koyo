@@ -34,7 +34,7 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
-  def buildTablePageViews(page: TablePage)(implicit client: OkHttpClient): Task[Seq[page.RowModel]] = {
+  def buildTablePageViews[T](page: TablePage[T])(implicit client: OkHttpClient): Task[Seq[T]] = {
     val request = new Request.Builder()
       .url(page.url)
       .get()

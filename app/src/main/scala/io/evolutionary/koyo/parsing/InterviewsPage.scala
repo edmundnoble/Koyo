@@ -7,7 +7,7 @@ import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.Models.Interview
 import io.evolutionary.koyo.parsing.TableHeaders.Common
 
-object InterviewPage extends TablePage {
+object InterviewsPage extends TablePage[Models.Interview] {
 
   sealed trait Tables
 
@@ -27,12 +27,9 @@ object InterviewPage extends TablePage {
       InterviewSpecial -> "UW_CO_NSCHD_JOB$scroll$0",
       InterviewCancelled -> "UW_CO_SINT_CANC$scroll$0")
 
-
-  type RowModel = Models.Interview
-
   override def url: URL = Jobmine.Links.Interviews
 
-  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[Interview] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[Models.Interview] = {
     import TableHeaders._
     val rowsWithInterviewStatus = tables.map {
       case (tableType, row) =>

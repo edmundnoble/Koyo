@@ -6,7 +6,7 @@ import android.view.View
 import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.Models.JobSearched
 
-object JobSearchPage extends TablePage {
+object JobSearchPage extends TablePage[Models.JobSearched] {
 
   sealed trait Tables
 
@@ -16,11 +16,9 @@ object JobSearchPage extends TablePage {
 
   override def tableNames = Map(JobSearchTable -> "UW_CO_JOBRES_VW$scroll$0")
 
-  override type RowModel = Models.JobSearched
-
   override def url: URL = Jobmine.Links.JobSearch
 
-  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[JobSearched] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[Models.JobSearched] = {
     import TableHeaders._
     val jobs = tables.values.flatMap(_.map {
       row =>
