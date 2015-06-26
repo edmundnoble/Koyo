@@ -11,7 +11,7 @@ import io.evolutionary.koyo.parsing.Models
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-class ModelAdapter[Model: Manifest, V <: View with ModelView[Model]](context: Context, makeView: (Context, Model) => V)
+class ModelAdapter[Model, V <: View with ModelView[Model]](context: Context, makeView: (Context, Model) => V)
   extends ArrayAdapter[Model](context, 0, new util.ArrayList[Model]()) {
   def models = (0 until getCount) map getItem
 

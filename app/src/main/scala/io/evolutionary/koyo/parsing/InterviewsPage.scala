@@ -7,17 +7,15 @@ import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.Models.Interview
 import io.evolutionary.koyo.parsing.TableHeaders.Common
 
-object InterviewsPage extends TablePage[Models.Interview] {
+sealed trait InterviewTables
+case object Interview extends InterviewTables
+case object InterviewGroup extends InterviewTables
+case object InterviewSpecial extends InterviewTables
+case object InterviewCancelled extends InterviewTables
+
+object InterviewsPage extends TablePage[Models.Interview, InterviewTables] {
 
   sealed trait Tables
-
-  case object Interview extends Tables
-
-  case object InterviewGroup extends Tables
-
-  case object InterviewSpecial extends Tables
-
-  case object InterviewCancelled extends Tables
 
   type TableType = Tables
 
@@ -29,7 +27,7 @@ object InterviewsPage extends TablePage[Models.Interview] {
 
   override def url: URL = Jobmine.Links.Interviews
 
-  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[Models.Interview] = {
+  override def tablesToRows(tables: RawTables): Seq[Models.Interview] = {
     import TableHeaders._
     val rowsWithInterviewStatus = tables.map {
       case (tableType, row) =>
