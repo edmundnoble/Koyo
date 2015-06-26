@@ -19,15 +19,15 @@ trait TablePage[RowModel, TableType] { self =>
   def tablesToRows(tables: RawTables): Seq[RowModel]
 
   def <<<(fun: (RawTables) => RawTables): TablePage[RowModel, TableType] = new TablePage[RowModel, TableType] {
-    def tableNames = self.tableNames
-    def url = self.url
-    def tablesToRows(tables: RawTables) = self.tablesToRows(fun(tables))
+    override def tableNames = self.tableNames
+    override def url = self.url
+    override def tablesToRows(tables: RawTables) = self.tablesToRows(fun(tables))
   }
 
   def >>>[T](fun: (Seq[RowModel] => Seq[T])) = new TablePage[T, TableType] {
-    def tableNames = self.tableNames
-    def url = self.url
-    def tablesToRows(tables: RawTables) = fun(self.tablesToRows(tables))
+    override def tableNames = self.tableNames
+    override def url = self.url
+    override def tablesToRows(tables: RawTables) = fun(self.tablesToRows(tables))
   }
 
 

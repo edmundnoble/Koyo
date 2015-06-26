@@ -31,9 +31,12 @@ class MainActivity extends BaseActivity {
 
 object MainPagerAdapter {
   val makeApplicationView = (context: Context, model: Models.Application) => new ApplicationView(context, model)
+  val allAppPage = ApplicationsPage <<< (_.filterKeys(_ == AllApplicationsTable))
+  val activeAppPage = ApplicationsPage <<< (_.filterKeys(_ == ActiveApplicationsTable))
+
   val FragmentsInOrder: Seq[() => Fragment] = Seq(
-    () => new ModelFragment(ApplicationsPage <<< (_.filterKeys(_ == AllApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView),
-    () => new ModelFragment(ApplicationsPage <<< (_.filterKeys(_ == ActiveApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView)
+    () => new ModelFragment(allAppPage >>> (_.sortBy (_.employer)), makeApplicationView),
+    () => new ModelFragment(activeAppPage >>> (_.sortBy(_.employer)), makeApplicationView)
   )
   val FragmentTitlesInOrder: Seq[String] = Seq("All Applications", "Active Applications")
 }

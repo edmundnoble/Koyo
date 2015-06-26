@@ -16,12 +16,8 @@ class ModelAdapter[Model, V <: View with ModelView[Model]](context: Context, mak
   def models = (0 until getCount) map getItem
 
   def models_=(models: Seq[Model]): Unit = {
-    val newModelSet = models.toSet
-    val oldModelSet = this.models.toSet
-    val toRemove = oldModelSet.diff(newModelSet)
-    val toAdd = newModelSet.diff(oldModelSet)
-    toRemove.foreach(remove)
-    toAdd.foreach(add)
+    this.models.foreach(remove)
+    models.foreach(add)
     notifyDataSetChanged()
   }
 
