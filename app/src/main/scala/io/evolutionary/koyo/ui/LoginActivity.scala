@@ -1,5 +1,6 @@
 package io.evolutionary.koyo.ui
 
+import java.io.InterruptedIOException
 import java.net.UnknownHostException
 
 import android.os.Bundle
@@ -9,7 +10,7 @@ import android.widget.EditText
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.Login._
 import io.evolutionary.koyo._
-import io.evolutionary.koyo.parsing.{InterviewPage, TableHeaders}
+import io.evolutionary.koyo.parsing.{ApplicationsPage, InterviewPage, TableHeaders}
 
 import scalaz._
 import scalaz.concurrent.Task
@@ -30,12 +31,12 @@ class LoginActivity extends BaseActivity {
     if (!loggingIn) {
       val username = usernameField.getString
       val password = passwordField.getString
-      Login.login(username, password).runAsync(parseLoginStatus(username, password, _))
+      Login.login(username, password).runAsyncUi(parseLoginStatus(username, password, _))
       loggingIn = true
     }
   }
 
-  private def parseLoginStatus(username: String, password: String, statusOrErr: Throwable \/ LoginStatus): Unit = runOnMainThread(() => {
+  private def parseLoginStatus(username: String, password: String, statusOrErr: Throwable \/ LoginStatus): Unit = {
     statusOrErr match {
       case \/-(status) => status match {
         case LoggedIn =>
@@ -48,11 +49,12 @@ class LoginActivity extends BaseActivity {
       }
       case -\/(err) => err match {
         case ex: UnknownHostException => toast("No internet connection!")
-        case e: Exception => Log.e("LoginActivity", s"Error logging in: \n${err.stackTraceAsString}")
+        case _: InterruptedIOException => toast("Login timed out")
+        case e: Exception => Log.e("LoginActivity", s"Error logging in: \n${err.allInfo}")
       }
     }
     loggingIn = false
-  })
+  }
 
   private def saveCredentials(username: String, password: String): Unit = {
     Preferences.putString(Keys.USERNAME, username)

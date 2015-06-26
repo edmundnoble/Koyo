@@ -24,11 +24,9 @@ object ApplicationsPage extends TablePage {
 
   override def url: URL = Jobmine.Links.Applications
 
-  override def tableToViews(rows: Seq[(TableType, Map[String, String])]): Seq[RowModel] = {
+  override def tablesToRows(rows: Map[TableType, Seq[Map[String, String]]]): Seq[RowModel] = {
     import TableHeaders._
-    val filteredRows = rows.collect {
-      case (`AllApps`, row) => row
-    }
+    val filteredRows = rows.getOrElse(AllApps, Seq.empty[Map[String, String]])
     val applications = filteredRows map { row =>
       for {
         jobId <- row.get(Common.JobId).flatMap(_.parseInt)

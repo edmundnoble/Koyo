@@ -14,5 +14,5 @@ trait TablePage {
   def tableNames: Map[TableType, String]
   def url: URL
 
-  def tableToViews(rows: Seq[(TableType, Map[String, String])]): Seq[RowModel]
+  def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[RowModel]
 }

@@ -2,12 +2,15 @@ package io.evolutionary.koyo
 
 import java.net.{CookieManager, CookiePolicy, URL}
 import java.security.GeneralSecurityException
+import java.util.concurrent.TimeUnit
 import javax.net.ssl._
 import java.security.cert.X509Certificate
 
+import android.content.Context
 import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
+import franmontiel.PersistentCookieStore
 import io.evolutionary.koyo.parsing.{TablePage, HtmlParser}
 
 import scala.concurrent.{Promise, Future}
@@ -32,22 +35,21 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
-  def buildTablePageViews(page: TablePage)(implicit client: OkHttpClient): Task[Option[Seq[page.RowModel]]] = {
+  def buildTablePageViews(page: TablePage)(implicit client: OkHttpClient): Task[Seq[page.RowModel]] = {
     val request = new Request.Builder()
       .url(page.url)
       .get()
       .build()
     asyncRequest(request) map { response =>
       val html = response.body().html
-      page.tableNames.foldLeft(Option(Seq.empty[page.RowModel])) {
-        case (acc, (tableType, tableName)) =>
+      println(s"App html: $html")
+      val tables = page.tableNames.foldLeft(Map[page.TableType, Seq[Map[String, String]]]()) {
+        (acc, tableInfo) =>
+          val (tableType, tableName) = tableInfo
           val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)
-          val rowsModeled = rowsMaybe.map(rows => page.tableToViews(rows.map(row => (tableType, row))))
-          for {
-            initial <- acc
-            newRows <- rowsModeled
-          } yield initial ++ newRows
+          acc + (tableType -> (rowsMaybe getOrElse Seq.empty))
       }
+      page.tablesToRows(tables)
     }
   }
 
@@ -64,8 +66,11 @@ object Jobmine {
     }
   }
 
-  def makeUnsafeClient(): OkHttpClient = {
+  def makeUnsafeClient()(implicit context: Context): OkHttpClient = {
     val okHttpClient = new OkHttpClient()
+    okHttpClient.setConnectTimeout(2L, TimeUnit.SECONDS)
+    okHttpClient.setReadTimeout(2L, TimeUnit.SECONDS)
+    okHttpClient.setWriteTimeout(2L, TimeUnit.SECONDS)
     try {
       val trustAllCerts = Array[TrustManager](
         new X509TrustManager() {
@@ -90,9 +95,8 @@ object Jobmine {
       case _: GeneralSecurityException =>
     }
     // Jobmine needs cookies
-    val cookieManager = new CookieManager()
-    cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
-    okHttpClient.setCookieHandler(cookieManager)
+    //val cookieManager = new CookieManager(new PersistentCookieStore(context.getApplicationContext), CookiePolicy.ACCEPT_ALL)
+    //okHttpClient.setCookieHandler(cookieManager)
     okHttpClient
   }
 

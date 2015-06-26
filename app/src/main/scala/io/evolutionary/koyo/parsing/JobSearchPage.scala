@@ -7,8 +7,11 @@ import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.Models.JobSearched
 
 object JobSearchPage extends TablePage {
+
   sealed trait Tables
+
   case object JobSearchTable extends Tables
+
   override type TableType = Tables
 
   override def tableNames = Map(JobSearchTable -> "UW_CO_JOBRES_VW$scroll$0")
@@ -17,10 +20,10 @@ object JobSearchPage extends TablePage {
 
   override def url: URL = Jobmine.Links.JobSearch
 
-  override def tableToViews(rows: Seq[(Tables, Map[String, String])]): Seq[JobSearched] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[JobSearched] = {
     import TableHeaders._
-    val jobs = rows.map {
-      case (_, row) =>
+    val jobs = tables.values.flatMap(_.map {
+      row =>
         for {
           jobId <- row.get(Common.JobId).flatMap(_.parseInt)
           jobTitle <- row.get(Common.JobTitle)
@@ -30,7 +33,7 @@ object JobSearchPage extends TablePage {
           shortListed = ???
           unit <- row.get(JobSearch.UnitName)
         } yield JobSearched(jobId, jobTitle, employer, jobStatus, openings, shortListed, unit)
-    }
-    jobs.flatten
+    })
+    jobs.flatten.toSeq
   }
 }

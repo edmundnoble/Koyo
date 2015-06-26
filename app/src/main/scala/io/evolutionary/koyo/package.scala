@@ -61,6 +61,10 @@ package object koyo {
   implicit class TaskThreadTools[T](val t: Task[T]) extends AnyVal {
     def ui: Task[Unit] = Task.delay(runOnMainThread(() => t.run))
 
+    def runAsyncUi(fun: (Throwable \/ T) => Unit): Unit = {
+      t.runAsync((res) => runOnMainThread(() => fun(res)))
+    }
+
     def bg: Task[T] = Task.async[T] { cb =>
       if (!onMainThread) {
         cb(t.attemptRun)
@@ -84,8 +88,8 @@ package object koyo {
     lazy val html = Jsoup.parse(body.string())
   }
 
-  implicit class ExceptionWithStackTrace(val ex: Throwable) extends AnyVal {
-    def stackTraceAsString: String = {
+  implicit class ExceptionWithAllInfo(val ex: Throwable) extends AnyVal {
+    def allInfo: String = {
       val sw = new StringWriter()
       ex.printStackTrace(new PrintWriter(sw))
       sw.toString

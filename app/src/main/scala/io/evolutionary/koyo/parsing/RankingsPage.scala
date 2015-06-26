@@ -17,10 +17,9 @@ object RankingsPage extends TablePage {
 
   override def url: URL = Jobmine.Links.Rankings
 
-  override def tableToViews(rows: Seq[(TableType, Map[String, String])]): Seq[RowModel] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[RowModel] = {
     import TableHeaders._
-    val rankings = rows map {
-      case (_, row) =>
+    val rankings = tables.values.flatMap(_.map { row =>
         for {
           jobId <- row.get(Common.JobId).flatMap(_.parseInt)
           jobTitle <- row.get(Common.JobTitle)
@@ -35,8 +34,8 @@ object RankingsPage extends TablePage {
           studentRank = row.get(Rankings.StudentRank)
         } yield Models.Ranking(jobId, jobTitle, employer, workLocation,
           studentRank, employerRank, workTermSupport, openDate, openTime, closeDate, closeTime)
-    }
-    rankings.flatten
+    })
+    rankings.flatten.toSeq
   }
 
 }

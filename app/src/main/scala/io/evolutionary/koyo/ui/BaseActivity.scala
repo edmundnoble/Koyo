@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
-import io.evolutionary.koyo.{Jobmine, R}
+import io.evolutionary.koyo.{Keys, Jobmine, R}
 import com.squareup.okhttp.OkHttpClient
 
 class BaseActivity extends AppCompatActivity {

@@ -1,5 +1,7 @@
 package io.evolutionary.koyo.ui
 
+import java.net.{CookieHandler, CookiePolicy, CookieManager}
+
 import android.app.Activity
 import android.os.{Bundle, Handler}
 import com.squareup.okhttp.OkHttpClient
@@ -18,6 +20,9 @@ class SplashActivity extends BaseActivity {
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_splash)
+    val cookieMan = new CookieManager()
+    cookieMan.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
+    CookieHandler.setDefault(cookieMan)
     activityStartMs = System.currentTimeMillis()
     credentials.cata({
       case (username, password) =>

@@ -15,10 +15,9 @@ object ShortlistPage extends TablePage {
 
   override def url: URL = Jobmine.Links.Shortlist
 
-  override def tableToViews(rows: Seq[(Tables, Map[String, String])]): Seq[ShortlistedJob] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[ShortlistedJob] = {
     import TableHeaders._
-    val shortlisted = rows.map {
-      case (_, row) =>
+    val shortlisted = tables.values.flatMap(_.flatMap { row =>
         for {
           jobId <- row.get(Shortlist.JobIdentifier).flatMap(_.parseInt)
           unit <- row.get(Shortlist.UnitName)
@@ -27,7 +26,7 @@ object ShortlistPage extends TablePage {
           applied = applyString == "Already Applied"
           lastDayToApply <- row.get(Shortlist.LastDayToApply).flatMap(_.parseDate)
         } yield ShortlistedJob(jobId, unit, location, applied, lastDayToApply)
-    }
-    shortlisted.flatten
+    })
+    shortlisted.toSeq
   }
 }

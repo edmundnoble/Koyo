@@ -32,9 +32,9 @@ object InterviewPage extends TablePage {
 
   override def url: URL = Jobmine.Links.Interviews
 
-  override def tableToViews(rows: Seq[(Tables, Map[String, String])]): Seq[Interview] = {
+  override def tablesToRows(tables: Map[TableType, Seq[Map[String, String]]]): Seq[Interview] = {
     import TableHeaders._
-    val rowsWithInterviewStatus = rows.map {
+    val rowsWithInterviewStatus = tables.map {
       case (tableType, row) =>
         val interviewType = tableType match {
           case `Interview` => "Normal"
@@ -44,25 +44,27 @@ object InterviewPage extends TablePage {
         }
         (interviewType, row)
     }
-    val interviews = rowsWithInterviewStatus map {
-      case (interviewType, row) =>
-        for {
-          jobId <- row.get(Common.JobId).flatMap(_.parseInt)
-          jobTitle <- row.get(Common.JobTitle)
-          employer <- row.get(Common.Employer)
-          interviewDate = row.get(Interviews.Date).flatMap(_.parseDate)
-          startTime = interviewDate.flatMap(date => row.get(Interviews.StartTime).flatMap(_.parseTime(date)))
-          endTime = interviewDate.flatMap(date => row.get(Interviews.EndTime).flatMap(_.parseTime(date)))
-          room <- row.get(Interviews.Room)
-          instructions <- row.get(Interviews.Instructions)
-          jobStatus <- row.get(Common.JobStatus)
-          interviewer <- row.get(Interviews.Interviewer)
-        } yield Models.Interview(
-          jobId, jobTitle, employer, interviewType,
-          interviewDate, startTime, endTime, interviewer, room,
-          instructions, jobStatus)
+    val interviews = rowsWithInterviewStatus flatMap {
+      case (interviewType, rows) =>
+        rows.map { row =>
+          for {
+            jobId <- row.get(Common.JobId).flatMap(_.parseInt)
+            jobTitle <- row.get(Common.JobTitle)
+            employer <- row.get(Common.Employer)
+            interviewDate = row.get(Interviews.Date).flatMap(_.parseDate)
+            startTime = interviewDate.flatMap(date => row.get(Interviews.StartTime).flatMap(_.parseTime(date)))
+            endTime = interviewDate.flatMap(date => row.get(Interviews.EndTime).flatMap(_.parseTime(date)))
+            room <- row.get(Interviews.Room)
+            instructions <- row.get(Interviews.Instructions)
+            jobStatus <- row.get(Common.JobStatus)
+            interviewer <- row.get(Interviews.Interviewer)
+          } yield Models.Interview(
+            jobId, jobTitle, employer, interviewType,
+            interviewDate, startTime, endTime, interviewer, room,
+            instructions, jobStatus)
+        }
     }
-    interviews.flatten
+    interviews.flatten.toSeq
   }
 
 }
