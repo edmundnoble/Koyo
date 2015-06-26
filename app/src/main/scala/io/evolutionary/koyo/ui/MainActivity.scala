@@ -17,9 +17,7 @@ class MainActivity extends BaseActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    val toolbar: Toolbar = getView(R.id.tool_bar)
-    setSupportActionBar(toolbar)
-
+    injectToolbar()
     viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager))
     tabLayout.setDistributeEvenly(true)
     tabLayout.setCustomTabColorizer(new TabColorizer {

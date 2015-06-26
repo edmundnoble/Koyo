@@ -19,6 +19,7 @@ class ApplicationView(ctx: Context,
   inflater.inflate(R.layout.application_view, this)
 
   override def onFinishInflate(): Unit = {
+    super.onFinishInflate()
     jobTitleView = Some(getView(R.id.job_title))
     employerView = Some(getView(R.id.employer))
     appStatusView = Some(getView(R.id.app_status))

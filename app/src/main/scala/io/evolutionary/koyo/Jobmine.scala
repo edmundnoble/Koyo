@@ -10,7 +10,6 @@ import android.content.Context
 import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
-import franmontiel.PersistentCookieStore
 import io.evolutionary.koyo.parsing.{TablePage, HtmlParser}
 
 import scala.concurrent.{Promise, Future}
@@ -42,7 +41,6 @@ object Jobmine {
       .build()
     asyncRequest(request) map { response =>
       val html = response.body().html
-      println(s"App html: $html")
       val tables = page.tableNames.foldLeft(Map[page.TableType, Seq[Map[String, String]]]()) {
         (acc, tableInfo) =>
           val (tableType, tableName) = tableInfo

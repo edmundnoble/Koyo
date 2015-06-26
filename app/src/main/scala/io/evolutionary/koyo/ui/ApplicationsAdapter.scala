@@ -1,38 +1,37 @@
 package io.evolutionary.koyo.ui
 
+import java.util
+
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
-import android.view.ViewGroup
+import android.view.{View, ViewGroup}
+import android.widget.{ArrayAdapter, ListAdapter, ListView}
 import io.evolutionary.koyo.parsing.Models
+import scala.collection.JavaConverters._
+import scala.util.Try
 
-object ApplicationsAdapter {
+class ApplicationsAdapter(context: Context) extends ArrayAdapter[Models.Application](context, 0, new util.ArrayList[Models.Application]()) {
 
-  class MyHolder(val view: ApplicationView) extends ViewHolder(view)
+  def applications = (0 until getCount) map getItem
 
-}
-
-class ApplicationsAdapter(private var _applications: Seq[Models.Application]) extends RecyclerView.Adapter[ApplicationsAdapter.MyHolder] {
-
-  import ApplicationsAdapter._
-
-  def applications = _applications
   def applications_=(apps: Seq[Models.Application]): Unit = {
-    _applications = apps
+    val newAppSet = apps.toSet
+    val oldAppSet = applications.toSet
+    val toRemove = oldAppSet.diff(newAppSet)
+    val toAdd = newAppSet.diff(oldAppSet)
+    toRemove.foreach(remove)
+    toAdd.foreach(add)
+    println(s"Added $toAdd")
+    println(s"Removed $toRemove")
+
     notifyDataSetChanged()
   }
 
-  @Override
-  def onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder = {
-    val v = new ApplicationView(parent.getContext)
-    new MyHolder(v)
+  override def getView(pos: Int, convertView: View, parent: ViewGroup): View = {
+    val realView = Try(convertView.asInstanceOf[ApplicationView]) getOrElse new ApplicationView(parent.getContext)
+    realView.application = Some(applications(pos))
+    realView
   }
-
-  @Override
-  def onBindViewHolder(holder: MyHolder, position: Int) = {
-    holder.view.application = Some(applications(position))
-  }
-
-  @Override
-  def getItemCount: Int = applications.length
 
 }
