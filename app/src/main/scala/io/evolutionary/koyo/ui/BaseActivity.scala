@@ -21,7 +21,7 @@ class BaseActivity extends AppCompatActivity {
   def openActivity(destination: Class[_]): Unit =
     startActivity(new Intent(this, destination))
 
-  private lazy val toolbar = getView[Toolbar](R.id.toolbar)
+  protected lazy val toolbar = getView[Toolbar](R.id.toolbar)
 
   protected def getView[T <: View](id: Int): T = findViewById(id).asInstanceOf[T]
 

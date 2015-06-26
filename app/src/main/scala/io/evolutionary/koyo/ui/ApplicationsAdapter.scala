@@ -22,16 +22,17 @@ class ApplicationsAdapter(context: Context) extends ArrayAdapter[Models.Applicat
     val toAdd = newAppSet.diff(oldAppSet)
     toRemove.foreach(remove)
     toAdd.foreach(add)
-    println(s"Added $toAdd")
-    println(s"Removed $toRemove")
 
     notifyDataSetChanged()
   }
 
   override def getView(pos: Int, convertView: View, parent: ViewGroup): View = {
-    val realView = Try(convertView.asInstanceOf[ApplicationView]) getOrElse new ApplicationView(parent.getContext)
-    realView.application = Some(applications(pos))
-    realView
+    val application = getItem(pos)
+    Option(convertView).fold(new ApplicationView(parent.getContext, application)) { cview =>
+      val asAppView = cview.asInstanceOf[ApplicationView]
+      asAppView.updateText(application)
+      asAppView
+    }
   }
 
 }

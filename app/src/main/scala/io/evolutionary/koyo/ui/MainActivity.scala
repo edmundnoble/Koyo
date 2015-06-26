@@ -16,12 +16,14 @@ class MainActivity extends BaseActivity {
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
+    toolbar.setElevation(0)
 
     injectToolbar()
     viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager))
     tabLayout.setDistributeEvenly(true)
+    tabLayout.setCustomTabView(R.layout.tab_layout, android.R.id.text1)
     tabLayout.setCustomTabColorizer(new TabColorizer {
-      override def getIndicatorColor(position: Int): Int = getResources.getColor(R.color.accent)
+      override def getIndicatorColor(position: Int): Int = getResources.getColor(android.R.color.white)
     })
     tabLayout.setViewPager(viewPager)
   }
