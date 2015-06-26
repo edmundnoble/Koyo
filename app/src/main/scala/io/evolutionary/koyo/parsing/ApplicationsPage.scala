@@ -17,7 +17,7 @@ object ApplicationsPage extends TablePage[Models.Application, ApplicationsTables
   override def tableNames: Map[ApplicationsTables, String] =
     Map(
       AllApplicationsTable -> "UW_CO_APPS_VW2$scrolli$0",
-      ActiveApplicationsTable -> "UW_CO_SINT_CANC$scroll$0"
+      ActiveApplicationsTable -> "UW_CO_STU_APPSV$scroll$0"
     )
 
   override def url: URL = Jobmine.Links.Applications

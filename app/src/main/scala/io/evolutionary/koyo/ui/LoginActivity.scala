@@ -3,6 +3,7 @@ package io.evolutionary.koyo.ui
 import java.io.InterruptedIOException
 import java.net.UnknownHostException
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -18,6 +19,7 @@ import scalaz.concurrent.Task
 class LoginActivity extends BaseActivity {
 
   private var loggingIn = false
+  private lazy val progressDialog = new ProgressDialog(this)
   private lazy val usernameField = getView[EditText](R.id.usernameField)
   private lazy val passwordField = getView[EditText](R.id.passwordField)
 
@@ -25,6 +27,7 @@ class LoginActivity extends BaseActivity {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     injectToolbar()
+    progressDialog.setMessage("Loading")
   }
 
   def onLoginButtonClicked(view: View): Unit = {
@@ -33,10 +36,12 @@ class LoginActivity extends BaseActivity {
       val password = passwordField.getString
       Login.login(username, password).runAsyncUi(parseLoginStatus(username, password, _))
       loggingIn = true
+      progressDialog.show()
     }
   }
 
   private def parseLoginStatus(username: String, password: String, statusOrErr: Throwable \/ LoginStatus): Unit = {
+    progressDialog.dismiss()
     statusOrErr match {
       case \/-(status) => status match {
         case LoggedIn =>

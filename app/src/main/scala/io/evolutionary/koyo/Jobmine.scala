@@ -34,14 +34,14 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
-  def buildTablePageViews[T](page: TablePage[T])(implicit client: OkHttpClient): Task[Seq[T]] = {
+  def buildTablePageViews[T, P](page: TablePage[T, P])(implicit client: OkHttpClient): Task[Seq[T]] = {
     val request = new Request.Builder()
       .url(page.url)
       .get()
       .build()
     asyncRequest(request) map { response =>
       val html = response.body().html
-      val tables = page.tableNames.foldLeft(Map[page.TableType, Seq[Map[String, String]]]()) {
+      val tables = page.tableNames.foldLeft(Map[P, Seq[Map[String, String]]]()) {
         (acc, tableInfo) =>
           val (tableType, tableName) = tableInfo
           val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)

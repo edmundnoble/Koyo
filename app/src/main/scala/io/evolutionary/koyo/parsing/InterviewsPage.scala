@@ -4,11 +4,10 @@ import java.net.URL
 
 import android.view.View
 import io.evolutionary.koyo._
-import io.evolutionary.koyo.parsing.Models.Interview
 import io.evolutionary.koyo.parsing.TableHeaders.Common
 
 sealed trait InterviewTables
-case object Interview extends InterviewTables
+case object InterviewNormal extends InterviewTables
 case object InterviewGroup extends InterviewTables
 case object InterviewSpecial extends InterviewTables
 case object InterviewCancelled extends InterviewTables
@@ -20,7 +19,7 @@ object InterviewsPage extends TablePage[Models.Interview, InterviewTables] {
   type TableType = Tables
 
   override def tableNames =
-    Map(Interview -> "UW_CO_STUD_INTV$scroll$0",
+    Map(InterviewNormal -> "UW_CO_STUD_INTV$scroll$0",
       InterviewGroup -> "UW_CO_GRP_STU_V$scroll$0",
       InterviewSpecial -> "UW_CO_NSCHD_JOB$scroll$0",
       InterviewCancelled -> "UW_CO_SINT_CANC$scroll$0")
@@ -32,7 +31,7 @@ object InterviewsPage extends TablePage[Models.Interview, InterviewTables] {
     val rowsWithInterviewStatus = tables.map {
       case (tableType, row) =>
         val interviewType = tableType match {
-          case `Interview` => "Normal"
+          case `InterviewNormal` => "Normal"
           case `InterviewGroup` => "Group"
           case `InterviewSpecial` => "Special"
           case `InterviewCancelled` => "Cancelled"

@@ -8,7 +8,7 @@ import android.support.v4.view.ViewPager
 import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout
 import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout.TabColorizer
 import io.evolutionary.koyo.R
-import io.evolutionary.koyo.parsing.{ApplicationsPage, Models}
+import io.evolutionary.koyo.parsing.{ActiveApplicationsTable, AllApplicationsTable, ApplicationsPage, Models}
 
 class MainActivity extends BaseActivity {
   lazy val viewPager: ViewPager = getView(R.id.pager)
@@ -17,7 +17,6 @@ class MainActivity extends BaseActivity {
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    toolbar.setElevation(0)
 
     injectToolbar()
     viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager))
@@ -31,12 +30,12 @@ class MainActivity extends BaseActivity {
 }
 
 object MainPagerAdapter {
-  val makeApplicationView = (context: Context, model: Models.Application) = new ApplicationView(context, model)
+  val makeApplicationView = (context: Context, model: Models.Application) => new ApplicationView(context, model)
   val FragmentsInOrder: Seq[() => Fragment] = Seq(
-    () => new ModelFragment(ApplicationsPage, makeApplicationView),
-    () => new ModelFragment(ApplicationsPage >>> (_.filter(_.appStatus == "Active")), makeApplicationView)
+    () => new ModelFragment(ApplicationsPage <<< (_.filterKeys(_ == AllApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView),
+    () => new ModelFragment(ApplicationsPage <<< (_.filterKeys(_ == ActiveApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView)
   )
-  val FragmentTitlesInOrder: Seq[String] = Seq("Applications")
+  val FragmentTitlesInOrder: Seq[String] = Seq("All Applications", "Active Applications")
 }
 
 class MainPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) {
