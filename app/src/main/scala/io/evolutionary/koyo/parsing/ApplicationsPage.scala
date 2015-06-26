@@ -6,17 +6,25 @@ import android.view.View
 import io.evolutionary.koyo.Jobmine
 import io.evolutionary.koyo._
 
-object ApplicationsPage extends TablePage[Models.Application, Unit] {
+sealed trait ApplicationsTables
 
-  override def tableNames: Map[Unit, String] =
+case object AllApplicationsTable extends ApplicationsTables
+
+case object ActiveApplicationsTable extends ApplicationsTables
+
+object ApplicationsPage extends TablePage[Models.Application, ApplicationsTables] {
+
+  override def tableNames: Map[ApplicationsTables, String] =
     Map(
-      () -> "UW_CO_APPS_VW2$scrolli$0")
+      AllApplicationsTable -> "UW_CO_APPS_VW2$scrolli$0",
+      ActiveApplicationsTable -> "UW_CO_SINT_CANC$scroll$0"
+    )
 
   override def url: URL = Jobmine.Links.Applications
 
-  override def tablesToRows(rows: Map[Unit, Seq[Map[String, String]]]): Seq[Models.Application] = {
+  override def tablesToRows(tables: RawTables): Seq[Models.Application] = {
     import TableHeaders._
-    val applications = rows.values.head.map { row =>
+    val applications = tables.values.flatMap(rows => rows.map { row =>
       for {
         jobId <- row.get(Common.JobId).flatMap(_.parseInt)
         jobTitle <- row.get(Common.JobTitle)
@@ -30,7 +38,7 @@ object ApplicationsPage extends TablePage[Models.Application, Unit] {
       } yield Models.Application(
         jobId, jobTitle, employer, jobStatus,
         unit, term, appStatus, lastDay, numApps)
-    }
-    applications.flatten
+    })
+    applications.flatten.toSeq
   }
 }
