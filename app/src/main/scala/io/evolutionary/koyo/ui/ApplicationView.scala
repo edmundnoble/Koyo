@@ -9,8 +9,8 @@ import io.evolutionary.koyo.R
 import io.evolutionary.koyo.parsing.Models
 import io.evolutionary.koyo.parsing.Models.Application
 
-class ApplicationView(ctx: Context,
-                      var application: Models.Application) extends LinearLayout(ctx) with GetViewForView with ModelView[Models.Application] {
+class ApplicationView(ctx: Context, var application: Models.Application)
+  extends LinearLayout(ctx) with GetViewForView with ModelView[Models.Application] {
 
   private lazy val jobTitleView: TextView = getView(R.id.job_title)
   private lazy val employerView: TextView = getView(R.id.employer)

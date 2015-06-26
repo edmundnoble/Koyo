@@ -1,37 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="88dp"
+    android:clipToPadding="false"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp">
 
     <TextView
-        android:text="Job Title"
-        android:id="@+id/job_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16dp" />
-
-    <TextView
-        android:text="Employer"
         android:id="@+id/employer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/job_title"
-        android:textSize="10dp" />
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:singleLine="true"
+        android:text="Employer"
+        android:textColor="@color/text_primary"
+        android:textSize="16dp" />
 
     <TextView
-        android:text="App Status"
+        android:id="@+id/job_title"
+        android:textColor="@color/text_primary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="Job Title"
+        android:textSize="14dp" />
+
+    <TextView
+        android:textColor="@color/text_secondary"
         android:id="@+id/app_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/job_title"
-        android:textSize="16dp" />
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:singleLine="true"
+        android:text="App Status"
+        android:textSize="12dp" />
 
     <TextView
-        android:text="Job Status"
+        android:textColor="@color/text_secondary"
         android:id="@+id/job_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_status"
-        android:textSize="16dp" />
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-light"
+        android:singleLine="true"
+        android:text="Job Status"
+        android:textSize="12dp" />
 
-</RelativeLayout>
+</LinearLayout>
