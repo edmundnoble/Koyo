@@ -2,6 +2,7 @@ package io.evolutionary.koyo.ui.applications
 
 import android.content.Context
 import android.os.Bundle
+import android.support.design.widget.TabLayout
 import android.support.v4.app.{Fragment, FragmentPagerAdapter, FragmentManager}
 import android.support.v4.view.ViewPager
 import android.view.{View, ViewGroup, LayoutInflater}
@@ -18,15 +19,12 @@ class ApplicationsFragment extends BaseFragment {
     super.onCreate(savedInstanceState)
     val view = inflater.inflate(R.layout.fragment_applications, container, false)
     val viewPager: ViewPager = findView(view, R.id.pager)
-    val tabLayout: SlidingTabLayout = findView(view, R.id.layout)
+    val tabLayout: TabLayout = findView(view, R.id.tab_layout)
 
+    def getColor(id: Int): Int = getResources.getColor(id)
     viewPager.setAdapter(new MainPagerAdapter(getActivity.getSupportFragmentManager))
-    tabLayout.setDistributeEvenly(true)
-    tabLayout.setCustomTabView(R.layout.tab_layout, android.R.id.text1)
-    tabLayout.setCustomTabColorizer(new TabColorizer {
-      override def getIndicatorColor(position: Int): Int = getResources.getColor(android.R.color.white)
-    })
-    tabLayout.setViewPager(viewPager)
+    tabLayout.setTabTextColors(getColor(R.color.tab_text_inactive), getColor(R.color.tab_text_active))
+    tabLayout.setupWithViewPager(viewPager)
     view
   }
 }
