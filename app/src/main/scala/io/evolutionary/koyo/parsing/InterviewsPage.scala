@@ -1,15 +1,20 @@
 package io.evolutionary.koyo.parsing
 
 import java.net.URL
+import java.util.Date
 
 import android.view.View
 import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.TableHeaders.Common
 
 sealed trait InterviewTables
+
 case object InterviewNormal extends InterviewTables
+
 case object InterviewGroup extends InterviewTables
+
 case object InterviewSpecial extends InterviewTables
+
 case object InterviewCancelled extends InterviewTables
 
 object InterviewsPage extends TablePage[Models.Interview, InterviewTables] {
@@ -44,10 +49,14 @@ object InterviewsPage extends TablePage[Models.Interview, InterviewTables] {
           for {
             jobId <- row.get(Common.JobId).flatMap(_.parseInt)
             jobTitle <- row.get(Common.JobTitle)
-            employer <- row.get(Common.Employer)
+            employer <- row.get(Interviews.EmployerName)
             interviewDate = row.get(Interviews.Date).flatMap(_.parseDate)
             startTime = interviewDate.flatMap(date => row.get(Interviews.StartTime).flatMap(_.parseTime(date)))
-            endTime = interviewDate.flatMap(date => row.get(Interviews.EndTime).flatMap(_.parseTime(date)))
+            length = row.get(Interviews.Length).flatMap(_.parseInt)
+            endTime = for {
+              start <- startTime
+              len <- length
+            } yield new Date(start.getTime + len * 1000 * 60)
             room <- row.get(Interviews.Room)
             instructions <- row.get(Interviews.Instructions)
             jobStatus <- row.get(Common.JobStatus)

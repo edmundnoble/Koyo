@@ -16,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import io.evolutionary.koyo.R
 import io.evolutionary.koyo.ui.applications.{ApplicationView, ApplicationsFragment}
 import io.evolutionary.koyo.ui.common.BaseActivity
+import io.evolutionary.koyo.ui.interviews.InterviewFragment
 
 class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSelectedListener {
 
@@ -50,7 +51,7 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
       swapFragment(selectedPage match {
         case R.id.nav_interviews =>
           setToolbarTitle("Interviews")
-          new ModelListFragment(InterviewsPage, (context: Context) => new InterviewView(context))
+          InterviewFragment.makeFragment
         case R.id.nav_applications =>
           setToolbarTitle("Applications")
           new ApplicationsFragment
@@ -63,5 +64,5 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
   }
 
   private def swapFragment(fragment: Fragment): Unit =
-    fragmentManager beginTransaction() replace(R.id.container, fragment) commit()
+    fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
 }

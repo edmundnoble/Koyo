@@ -1,14 +1,12 @@
 package io.evolutionary.koyo
 
 import java.text.SimpleDateFormat
+import io.evolutionary.koyo.util.DateFormats._
 import java.util.{Calendar, GregorianCalendar, Locale, Date}
 
 import scala.util.Try
 
 package object parsing {
-  val SpaceFormat = new SimpleDateFormat("d MMM yyyy", Locale.getDefault)
-  val DashFormat = new SimpleDateFormat("d-MMM-yyyy", Locale.getDefault)
-  val TimeFormat = new SimpleDateFormat("HH:mm a")
 
   implicit class StringParseDate(val str: String) extends AnyVal {
     def parseDate: Option[Date] = {

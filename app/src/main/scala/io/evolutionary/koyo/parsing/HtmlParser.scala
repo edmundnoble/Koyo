@@ -8,13 +8,11 @@ import scala.collection.JavaConverters._
 object HtmlParser {
   val tableCSSClass = "PSLEVEL1GRIDWBO"
 
-
-
   @inline def getTag(elem: Element, tag: String): Seq[Element] = elem.getElementsByTag(tag).asScala
 
   def makeRowsFromHtml(tableName: String, htmlDocument: Document): Option[Seq[Map[String, String]]] = {
 
-    val parseResult: Option[(Seq[String], Seq[Seq[String]])] = // So the structure of the jobmine tables goes thus:
+    val parseResult: Option[(Seq[String], Seq[Seq[String]])] =
       for {
         origTable <- htmlDocument.getElementsByClass(tableCSSClass).iterator().asScala.find(_.id() == tableName) // There are TWO tables with the same ID. So filter them out by class first.
         rowElements = for {

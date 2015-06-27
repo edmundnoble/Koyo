@@ -23,14 +23,14 @@ object TableHeaders {
   }
 
   object Interviews {
-    val EmployerName = "Employer"
+    val EmployerName = "Employer Name"
     val Date = "Date"
     val InterviewType = "Type"
     val SelectTime = "Interview Select Time"
     val StartTime = "Start Time"
     val EndTime = "Finished Time"
     val Length = "Length"
-    val Room = "Room Info"
+    val Room = "Room"
     val Instructions = "Instructions"
     val Interviewer = "Interviewer"
   }

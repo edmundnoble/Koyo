@@ -30,5 +30,9 @@ trait TablePage[RowModel, TableType] { self =>
     override def tablesToRows(tables: RawTables) = fun(self.tablesToRows(tables))
   }
 
+  def before(fun: (RawTables) => RawTables): TablePage[RowModel, TableType] = <<<(fun)
+
+  def after[T](fun: (Seq[RowModel] => Seq[T])) = >>>(fun)
+
 
 }

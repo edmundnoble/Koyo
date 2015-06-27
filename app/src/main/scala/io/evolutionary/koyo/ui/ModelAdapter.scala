@@ -23,10 +23,12 @@ class ModelAdapter[Model, V <: View with ModelView[Model]](context: Context, mak
 
   override def getView(pos: Int, convertView: View, parent: ViewGroup): View = {
     val model = getItem(pos)
-    Option(convertView).fold(makeView(parent.getContext)) { cview =>
-      val asAppView = cview.asInstanceOf[V]
-      asAppView.updateModel(model)
-      asAppView
+    val view = Option(convertView).fold {
+      makeView(context)
+    } { cview =>
+      cview.asInstanceOf[V]
     }
+    view.updateModel(model)
+    view
   }
 }

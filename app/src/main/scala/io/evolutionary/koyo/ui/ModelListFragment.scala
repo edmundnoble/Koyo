@@ -9,15 +9,14 @@ import android.widget.{ProgressBar, ListView}
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.R
 import io.evolutionary.koyo._
-import io.evolutionary.koyo.parsing.{TablePage, ApplicationsPage, Models}
+import io.evolutionary.koyo.parsing.{InterviewsPage, TablePage, ApplicationsPage, Models}
 import io.evolutionary.koyo.ui.common.BaseFragment
 
 import scalaz._
 import Scalaz._
 import scalaz.std.option._
 
-class ModelListFragment[Model, V <: View with ModelView[Model]]
-(page: TablePage[Model, _], makeView: (Context) => V) extends BaseFragment {
+class ModelListFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model, _], makeView: (Context) => V) extends BaseFragment {
 
   private var progress: ProgressBar = _
   private var errorContainer: ViewGroup = _
