@@ -16,6 +16,7 @@ import io.evolutionary.koyo.ui.common.BaseActivity
 class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSelectedListener {
 
   private lazy val applicationsFragment = new ApplicationsFragment
+  private lazy val interviewFragment = new InterviewFragment
   private lazy val fragmentManager = getSupportFragmentManager
   private lazy val navigationView: NavigationView = findView(R.id.navigation_view)
 
@@ -23,14 +24,18 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     injectToolbar()
-    getSupportActionBar setTitle "Applications"
-    swapFragmentapplicationsFragment
-    navigationView.setNavigationItemSelectedListener(this)
+    swapFragment applicationsFragment
+    navigationView setNavigationItemSelectedListener this
   }
 
   override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
     swapFragment(menuItem.getItemId match {
-      case R.id.nav_applications => applicationsFragment
+      case R.id.nav_interviews =>
+        getSupportActionBar setTitle ("Interviews")
+      case R.id.nav_applications =>
+        getSupportActionBar setTitle "Applications"
+        applicationsFragment
+
     })
     true
   }
