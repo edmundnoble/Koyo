@@ -4,6 +4,10 @@ import android.support.v4.app.Fragment
 import android.os.Bundle
 import io.evolutionary.koyo.JobSearch.SearchParams
 import io.evolutionary.koyo.{JobSearch, R}
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
+import io.evolutionary.koyo.R
+>>>>>>> Stashed changes
 import io.evolutionary.koyo.ui.applications.ApplicationsFragment
 import io.evolutionary.koyo.ui.common.BaseActivity
 

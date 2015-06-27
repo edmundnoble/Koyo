@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.widget.{LinearLayout, TextView}
 import io.evolutionary.koyo.R
-import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.Models
 import io.evolutionary.koyo.parsing.Models.Application
 import io.evolutionary.koyo.ui.{FindViewForView, ModelView}

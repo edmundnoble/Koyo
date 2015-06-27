@@ -36,9 +36,9 @@ class LoginActivity extends BaseActivity {
     if (!loggingIn) {
       val username = usernameField.getString
       val password = passwordField.getString
-      Login.login(username, password).runAsyncUi(parseLoginStatus(username, password, _))
       loggingIn = true
       progressDialog.show()
+      Login.login(username, password).runAsyncUi(parseLoginStatus(username, password, _))
     }
   }
 

@@ -19,7 +19,6 @@ import scalaz.std.option._
 class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model, _], makeView: (Context, Model) => V) extends BaseFragment {
   var listView: ListView = _
   var adapter: ModelAdapter[Model, V] = _
-//  implicit var okHttpClient: OkHttpClient = _
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     super.onCreate(savedInstanceState)
@@ -30,7 +29,6 @@ class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Mode
 
   override def onActivityCreated(savedInstanceState: Bundle): Unit = {
     super.onActivityCreated(savedInstanceState)
-  //  okHttpClient = Jobmine.makeUnsafeClient()
     adapter = new ModelAdapter[Model, V](getActivity, makeView)
     listView.setAdapter(adapter)
     Jobmine.requestTablePageRows(page).runAsyncUi(parseActivityData)
