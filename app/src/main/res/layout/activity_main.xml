@@ -8,26 +8,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/primary"
-        android:elevation="4dp"
-        android:orientation="vertical">
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/app_bar" />
 
-        <include
-            android:id="@+id/toolbar"
-            layout="@layout/app_bar" />
-
-        <com.google.samples.apps.iosched.ui.widget.SlidingTabLayout
-            android:id="@+id/layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/primary" />
-    </LinearLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
