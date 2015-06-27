@@ -23,11 +23,11 @@ class SplashActivity extends BaseActivity {
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
+    activityStartMs = System.currentTimeMillis()
     setContentView(R.layout.activity_splash)
     val cookieMan = new CookieManager()
     cookieMan.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
     CookieHandler.setDefault(cookieMan)
-    activityStartMs = System.currentTimeMillis()
     credentials.fold {
       startActivityAfterTimeout(classOf[LoginActivity])
     } {
@@ -40,14 +40,13 @@ class SplashActivity extends BaseActivity {
     val currentTimeMs = System.currentTimeMillis()
     val dt = currentTimeMs - activityStartMs
     if (dt < SPLASH_TIMEOUT) {
-      new Handler().postDelayed(() => openActivity(clazz), dt)
+      new Handler().postDelayed(() => openActivity(clazz), math.max(SPLASH_TIMEOUT - dt, 0))
     } else {
       openActivity(clazz)
     }
   }
 
   private def parseLoginResult(result: Throwable \/ Login.LoginStatus): Unit = {
-    JobSearch.searchForJobs(SearchParams(Seq(""), "", "", JobSearch.Approved, JobSearch.Coop, "", "", Set()), "", "").runAsync(println)
     result match {
       case -\/(ex) =>
         snackbar("There was a problem logging in")
