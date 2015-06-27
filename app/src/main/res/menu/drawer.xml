@@ -4,9 +4,11 @@
         <item
             android:id="@+id/nav_applications"
             android:checked="true"
+            android:icon="@drawable/ic_assignment_grey_24dp"
             android:title="Applications" />
         <item
             android:id="@+id/nav_interviews"
+            android:icon="@drawable/ic_person_outline_grey_24dp"
             android:title="Interviews" />
     </group>
 </menu>

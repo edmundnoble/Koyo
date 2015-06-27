@@ -6,8 +6,6 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.{Fragment, FragmentPagerAdapter, FragmentManager}
 import android.support.v4.view.ViewPager
 import android.view.{View, ViewGroup, LayoutInflater}
-import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout
-import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout.TabColorizer
 import io.evolutionary.koyo.parsing.{AllApplicationsTable, ActiveApplicationsTable, ApplicationsPage, Models}
 import io.evolutionary.koyo.ui.{ModelListFragment, ModelAdapter}
 import io.evolutionary.koyo.{Jobmine, R}

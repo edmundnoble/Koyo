@@ -19,7 +19,8 @@ import io.evolutionary.koyo.ui.common.BaseActivity
 
 class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSelectedListener {
 
-  private lazy val applicationsFragment = new ApplicationsFragment
+  //private lazy val applicationsFragment = new ApplicationsFragment
+  private var currentPage = R.id.nav_applications
   private lazy val fragmentManager = getSupportFragmentManager
   private lazy val drawerLayout: DrawerLayout = findView(R.id.drawer_layout)
   private lazy val navigationView: NavigationView = findView(R.id.navigation_view)
@@ -31,7 +32,7 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
     getSupportActionBar.setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp)
     getSupportActionBar.setDisplayHomeAsUpEnabled(true)
     setToolbarTitle("Applications")
-    swapFragment(applicationsFragment)
+    swapFragment(new ApplicationsFragment)
     navigationView.setNavigationItemSelectedListener(this)
   }
 
@@ -44,15 +45,19 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
   }
 
   override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
-    swapFragment(menuItem.getItemId match {
-      case R.id.nav_interviews =>
-        setToolbarTitle("Interviews")
-        new ModelListFragment(InterviewsPage, (context: Context) => new InterviewView(context))
-      case R.id.nav_applications =>
-        setToolbarTitle("Applications")
-        applicationsFragment
-    })
-
+    val selectedPage = menuItem.getItemId
+    if (selectedPage != currentPage) {
+      swapFragment(selectedPage match {
+        case R.id.nav_interviews =>
+          setToolbarTitle("Interviews")
+          new ModelListFragment(InterviewsPage, (context: Context) => new InterviewView(context))
+        case R.id.nav_applications =>
+          setToolbarTitle("Applications")
+          new ApplicationsFragment
+      })
+      menuItem.setChecked(!menuItem.isChecked)
+    }
+    currentPage = selectedPage
     drawerLayout.closeDrawer(Gravity.LEFT)
     true
   }
