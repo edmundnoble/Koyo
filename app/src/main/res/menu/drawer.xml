@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_1"
+            android:id="@+id/nav_applications"
             android:checked="true"
             android:title="Applications" />
         <item
-            android:id="@+id/navigation_item_2"
+            android:id="@+id/nav_interviews"
             android:title="Interviews" />
     </group>
 </menu>
