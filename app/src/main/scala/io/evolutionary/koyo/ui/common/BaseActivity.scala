@@ -1,12 +1,12 @@
-package io.evolutionary.koyo.ui
+package io.evolutionary.koyo.ui.common
 
 import android.content.{Context, Intent}
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
-import io.evolutionary.koyo.{Keys, Jobmine, R}
 import com.squareup.okhttp.OkHttpClient
+import io.evolutionary.koyo.{Jobmine, R}
 
 class BaseActivity extends AppCompatActivity {
 
@@ -21,12 +21,16 @@ class BaseActivity extends AppCompatActivity {
   def openActivity(destination: Class[_]): Unit =
     startActivity(new Intent(this, destination))
 
-  protected lazy val toolbar = getView[Toolbar](R.id.toolbar)
+  protected def findView[T <: View](id: Int): T = findViewById(id).asInstanceOf[T]
 
-  protected def getView[T <: View](id: Int): T = findViewById(id).asInstanceOf[T]
+  protected lazy val toolbar = findView[Toolbar](R.id.toolbar)
 
   protected def injectToolbar(): Unit = {
     setSupportActionBar(toolbar)
+  }
+
+  protected def enableToolbarLogo(enable: Boolean): Unit = {
+    toolbar.findViewById(R.id.logo).setVisibility(if (enable) View.VISIBLE else View.GONE)
     getSupportActionBar.setDisplayShowTitleEnabled(false)
   }
 

@@ -1,4 +1,4 @@
-package io.evolutionary.koyo.ui
+package io.evolutionary.koyo.ui.login
 
 import java.io.InterruptedIOException
 import java.net.UnknownHostException
@@ -8,25 +8,25 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.Login._
 import io.evolutionary.koyo._
-import io.evolutionary.koyo.parsing.{ApplicationsPage, InterviewsPage, TableHeaders}
+import io.evolutionary.koyo.ui.MainActivity
+import io.evolutionary.koyo.ui.common.BaseActivity
 
 import scalaz._
-import scalaz.concurrent.Task
 
 class LoginActivity extends BaseActivity {
 
   private var loggingIn = false
   private lazy val progressDialog = new ProgressDialog(this)
-  private lazy val usernameField = getView[EditText](R.id.usernameField)
-  private lazy val passwordField = getView[EditText](R.id.passwordField)
+  private lazy val usernameField = findView[EditText](R.id.usernameField)
+  private lazy val passwordField = findView[EditText](R.id.passwordField)
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_login)
     injectToolbar()
+    enableToolbarLogo(true)
     progressDialog.setMessage("Loading")
   }
 

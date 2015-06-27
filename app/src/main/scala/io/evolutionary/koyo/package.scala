@@ -58,8 +58,8 @@ package object koyo {
   def toast(text: String)(implicit context: Context): Unit =
     Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
 
-  implicit class GetViewable(val v: View) extends AnyVal {
-    def getView[T <: View](id: Int): T = v.findViewById(id).asInstanceOf[T]
+  implicit class FindViewable(val v: View) extends AnyVal {
+    def findView[T <: View](id: Int): T = v.findViewById(id).asInstanceOf[T]
   }
 
   def onMainThread: Boolean =
@@ -108,6 +108,5 @@ package object koyo {
 
     def parseBool: Option[Boolean] = Try(str.toBoolean).toOption
   }
-
 
 }

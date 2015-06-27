@@ -70,9 +70,9 @@ object Jobmine {
 
   def makeUnsafeClient()(implicit context: Context): OkHttpClient = {
     val okHttpClient = new OkHttpClient()
-    okHttpClient.setConnectTimeout(2L, TimeUnit.SECONDS)
-    okHttpClient.setReadTimeout(2L, TimeUnit.SECONDS)
-    okHttpClient.setWriteTimeout(2L, TimeUnit.SECONDS)
+    okHttpClient.setConnectTimeout(5L, TimeUnit.SECONDS)
+    okHttpClient.setReadTimeout(5L, TimeUnit.SECONDS)
+    okHttpClient.setWriteTimeout(5L, TimeUnit.SECONDS)
     try {
       val trustAllCerts = Array[TrustManager](
         new X509TrustManager() {

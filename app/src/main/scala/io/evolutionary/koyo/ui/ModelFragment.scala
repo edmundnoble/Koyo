@@ -10,6 +10,7 @@ import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo.R
 import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.{TablePage, ApplicationsPage, Models}
+import io.evolutionary.koyo.ui.common.BaseFragment
 
 import scalaz._
 import Scalaz._
@@ -18,20 +19,18 @@ import scalaz.std.option._
 class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model, _], makeView: (Context, Model) => V) extends BaseFragment {
   var listView: ListView = _
   var adapter: ModelAdapter[Model, V] = _
-  implicit var okHttpClient: OkHttpClient = _
+//  implicit var okHttpClient: OkHttpClient = _
 
-  override def onCreateView(inflater: LayoutInflater,
-                            container: ViewGroup,
-                            savedInstanceState: Bundle): View = {
+  override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     super.onCreate(savedInstanceState)
     val view = inflater.inflate(R.layout.fragment_model, container, false)
-    listView = view.getView(R.id.applications)
+    listView = view.findView(R.id.applications)
     view
   }
 
   override def onActivityCreated(savedInstanceState: Bundle): Unit = {
     super.onActivityCreated(savedInstanceState)
-    okHttpClient = Jobmine.makeUnsafeClient()
+  //  okHttpClient = Jobmine.makeUnsafeClient()
     adapter = new ModelAdapter[Model, V](getActivity, makeView)
     listView.setAdapter(adapter)
     Jobmine.requestTablePageRows(page).runAsyncUi(parseActivityData)

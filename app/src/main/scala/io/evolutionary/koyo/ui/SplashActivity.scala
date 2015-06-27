@@ -6,6 +6,8 @@ import android.app.Activity
 import android.os.{Bundle, Handler}
 import com.squareup.okhttp.OkHttpClient
 import io.evolutionary.koyo._
+import io.evolutionary.koyo.ui.common.BaseActivity
+import io.evolutionary.koyo.ui.login.LoginActivity
 
 import scalaz._
 import scalaz.std.option._
