@@ -33,7 +33,7 @@ object Login {
   val LOGIN_ERROR_MSG_SKIP = 3200
   val MAX_LOGIN_ATTEMPTS = 3
 
-  def login(username: String, password: String, taskNum: Int)(implicit client: OkHttpClient): Task[Writer[Int, LoginStatus]] = {
+  def login(username: String, password: String)(implicit client: OkHttpClient): Task[LoginStatus] = {
     Log.d("Login", "Logging in...")
     val encoding = new FormEncodingBuilder()
       .add("submit", "Submit")

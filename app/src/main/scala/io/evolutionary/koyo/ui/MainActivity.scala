@@ -2,7 +2,8 @@ package io.evolutionary.koyo.ui
 
 import android.support.v4.app.Fragment
 import android.os.Bundle
-import io.evolutionary.koyo.R
+import io.evolutionary.koyo.JobSearch.SearchParams
+import io.evolutionary.koyo.{JobSearch, R}
 import io.evolutionary.koyo.ui.applications.ApplicationsFragment
 import io.evolutionary.koyo.ui.common.BaseActivity
 

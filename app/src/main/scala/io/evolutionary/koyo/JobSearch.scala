@@ -1,6 +1,6 @@
 package io.evolutionary.koyo
 
-import com.squareup.okhttp.{FormEncodingBuilder, Request}
+import com.squareup.okhttp.{OkHttpClient, FormEncodingBuilder, Request}
 import io.evolutionary.koyo.parsing.{JobSearchPage, Models}
 import org.jsoup.nodes.Document
 
@@ -19,14 +19,14 @@ object JobSearch {
   val EmployerProperty = "UW_CO_JOBSRCH_UW_CO_EMPLYR_NAME"
   val TitleProperty = "UW_CO_JOBSRCH_UW_CO_JOB_TITLE"
 
-  case class Filter(pretty: String, jobmineValue: String)
+  case class Filter private[JobSearch] (pretty: String, jobmineValue: String)
 
   val Approved = Filter("Approved", "APPR")
   val AppsAvail = Filter("Apps Avail", "APPA")
   val Cancelled = Filter("Cancelled", "CANC")
   val Posted = Filter("Posted", "POST")
 
-  case class JobType(asString: String, asInt: Int)
+  case class JobType private[JobSearch] (asString: String, asJobmineId: Int)
 
   val Coop = JobType("Co-op", 1)
   val CoopArch = JobType("Co-op ARCH", 2)
@@ -50,13 +50,15 @@ object JobSearch {
 
   val AllLevels = Set(JuniorLevel, IntermediateLevel, SeniorLevel, BachelorsLevel, MastersLevel, PhDLevel)
 
-  case class SearchParams private[JobSearch](disciplines: Seq[String], term: String,
-                                              location: String, filter: Filter, jobType: String,
-                                              employer: String, title: String, levels: Set[JobLevel])
+  case class SearchParams(disciplines: Seq[String], term: String,
+                          location: String, filter: Filter, jobType: JobType,
+                          employer: String, title: String, levels: Set[JobLevel])
 
-  def getStateNum(html: Document): Int = ???
+  def getStateNum(html: Document): String = ""
 
-  def searchForJobs(params: SearchParams, stateNum: Int, icsid: Int): Task[(Seq[Models.JobSearched], Int)] = {
+  def getIcsid(html: Document): String = ""
+
+  def searchForJobs(params: SearchParams, stateNum: String, icsid: String)(implicit client: OkHttpClient): Task[Document] = {
     val requestBodyBuilder = new FormEncodingBuilder()
     val nonRequestedLevels = AllLevels diff params.levels
     nonRequestedLevels.foreach(level => requestBodyBuilder.add(level.jobmineProperty, "N"))
@@ -67,7 +69,7 @@ object JobSearch {
       .add("ICStateNum", stateNum)
       .add("ICSID", icsid)
       .add(LocationProperty, params.location)
-      .add(JobTypeProperty, params.jobType)
+      .add(JobTypeProperty, params.jobType.asJobmineId.toString)
       .add(FilterProperty, params.filter.jobmineValue)
       .add(TermProperty, params.term)
       .add(TitleProperty, params.title)
@@ -80,9 +82,7 @@ object JobSearch {
 
     Jobmine.asyncRequest(request) map { response =>
       val html = response.body().html
-      val rows = Jobmine.parseTablePageRows(JobSearchPage, html)
-      println(response.body().string())
-      (rows, getStateNum(response.body()))
+      html
     }
   }
 }

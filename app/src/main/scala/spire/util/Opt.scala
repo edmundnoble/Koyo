@@ -1,8 +1,5 @@
 package spire.util
 
-import spire.algebra.Eq
-import spire.syntax.eq._
-
 object Opt {
   def apply[A](a: A): Opt[A] = new Opt(a)
   def empty[A]: Opt[A] = new Opt[A](null.asInstanceOf[A])

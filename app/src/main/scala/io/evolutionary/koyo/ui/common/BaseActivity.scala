@@ -1,5 +1,6 @@
 package io.evolutionary.koyo.ui.common
 
+import android.app.Activity
 import android.content.{Context, Intent}
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -11,6 +12,7 @@ import io.evolutionary.koyo.{Jobmine, R}
 class BaseActivity extends AppCompatActivity {
 
   protected implicit val thisContext: Context = this
+  protected implicit val thisActivity: Activity = this
   protected implicit var okHttpClient: OkHttpClient = _
 
   protected override def onCreate(savedInstanceState: Bundle): Unit = {

@@ -39,7 +39,7 @@ class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Mode
   private def parseActivityData(res: Throwable \/ Seq[Model]): Unit = {
     res.fold({
       error: Throwable =>
-        toast("There was an error fetching activity data!")
+        snackbar("There was an error fetching activity data!")(getActivity)
         Log.d("ApplicationsFragment", s"Error fetching application data: ${error.allInfo}}")
     }, {
       models: Seq[Model] =>

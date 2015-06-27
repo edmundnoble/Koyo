@@ -7,6 +7,7 @@ import java.util.concurrent._
 import android.app.Activity
 import android.content.{Intent, Context}
 import android.os.{AsyncTask, Looper, Handler}
+import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
@@ -31,11 +32,6 @@ package object koyo {
     override def run(): Unit = block()
   }
 
-  implicit class OptMap[K, V](m: Map[K, V]) extends AnyVal {
-    def getOpt(k: K): Opt[V] = {
-      Opt(m(k))
-    }
-  }
 
   implicit def toOnClickListener[T](block: => T): OnClickListener = new OnClickListener {
     override def onClick(view: View): Unit = block
@@ -55,8 +51,8 @@ package object koyo {
       block()
   }
 
-  def toast(text: String)(implicit context: Context): Unit =
-    Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+  def snackbar(text: String)(implicit activity: Activity): Unit =
+    Snackbar.make(activity.getWindow.getDecorView.findView(android.R.id.content), text, Snackbar.LENGTH_SHORT).show()
 
   implicit class FindViewable(val v: View) extends AnyVal {
     def findView[T <: View](id: Int): T = v.findViewById(id).asInstanceOf[T]

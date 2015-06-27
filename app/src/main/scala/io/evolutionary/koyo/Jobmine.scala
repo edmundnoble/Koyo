@@ -41,18 +41,18 @@ object Jobmine {
       .url(page.url)
       .get()
       .build()
-    asyncRequest(request) map { response => parseTablePageRows(response.body().html) }
+    asyncRequest(request) map { response => parseTablePageRows(page, response.body().html) }
   }
 
   def parseTablePageRows[R, T](page: TablePage[R, T], html: Document): Seq[R] = {
-    val tables = mutable.Map[page.RawTables]()
+    val tables = mutable.Map[T, Seq[page.RawRow]]()
     page.tableNames.foldLeft(()) {
       (acc, tableInfo) =>
         val (tableType, tableName) = tableInfo
         val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)
         tables += (tableType -> (rowsMaybe getOrElse Seq.empty))
     }
-    page.tablesToRows(tables)
+    page.tablesToRows(tables.toMap)
   }
 
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {

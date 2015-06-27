@@ -5,9 +5,11 @@ import java.net.UnknownHostException
 
 import android.app.ProgressDialog
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import io.evolutionary.koyo.JobSearch.SearchParams
 import io.evolutionary.koyo.Login._
 import io.evolutionary.koyo._
 import io.evolutionary.koyo.ui.MainActivity
@@ -45,16 +47,16 @@ class LoginActivity extends BaseActivity {
     statusOrErr match {
       case \/-(status) => status match {
         case LoggedIn =>
-          toast("You're logged in now!")
+          snackbar("You're logged in now!")
           saveCredentials(username, password)
           openActivity(classOf[MainActivity])
           finish()
-        case LoggedOut => toast("Your credentials are invalid!")
-        case Offline => toast("Jobmine is offline! Please try again later.")
+        case LoggedOut => snackbar("Your credentials are invalid!")
+        case Offline => snackbar("Jobmine is offline! Please try again later.")
       }
       case -\/(err) => err match {
-        case ex: UnknownHostException => toast("No internet connection!")
-        case _: InterruptedIOException => toast("Login timed out")
+        case ex: UnknownHostException => snackbar("No internet connection!")
+        case _: InterruptedIOException => snackbar("Login timed out")
         case e: Exception => Log.e("LoginActivity", s"Error logging in: \n${err.allInfo}")
       }
     }
