@@ -24,8 +24,8 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
     setContentView(R.layout.activity_main)
     injectToolbar()
     getSupportActionBar setTitle "Applications"
-    swapFragment applicationsFragment
-    navigationView setNavigationItemSelectedListener this
+    swapFragmentapplicationsFragment
+    navigationView.setNavigationItemSelectedListener(this)
   }
 
   override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
@@ -36,5 +36,5 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
   }
 
   private def swapFragment(fragment: Fragment): Unit =
-    fragmentManager beginTransaction() add(R.id.container, fragment) commit()
+    fragmentManager beginTransaction() replace(R.id.container, fragment) commit()
 }
