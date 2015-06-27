@@ -32,7 +32,6 @@ class ModelListFragment[Model, V <: View with ModelView[Model]]
     listView = view.findView(R.id.model_list_view)
 
     adapter = new ModelAdapter[Model, V](getActivity, makeView)
-    // listView.setAdapter(adapter)
     Jobmine.requestTablePageRows(page).runAsyncUi(parseActivityData)
     view
   }
