@@ -1,5 +1,6 @@
 package io.evolutionary.koyo.ui.common
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -15,8 +16,8 @@ class BaseFragment extends Fragment {
 
   protected def findView[T <: View](view: View, id: Int): T = view.findViewById(id).asInstanceOf[T]
 
-  override def onActivityCreated(savedInstanceState: Bundle): Unit = {
-    super.onActivityCreated(savedInstanceState)
+  override def onAttach(activity: Activity): Unit = {
+    super.onAttach(activity)
     okHttpClient = Jobmine.makeUnsafeClient()
   }
 }

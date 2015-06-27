@@ -36,4 +36,6 @@ class BaseActivity extends AppCompatActivity {
     getSupportActionBar.setDisplayShowTitleEnabled(false)
   }
 
+  protected def setToolbarTitle(title: String): Unit = getSupportActionBar setTitle title
+
 }

@@ -8,7 +8,7 @@ import android.view.{View, ViewGroup, LayoutInflater}
 import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout
 import com.google.samples.apps.iosched.ui.widget.SlidingTabLayout.TabColorizer
 import io.evolutionary.koyo.parsing.{AllApplicationsTable, ActiveApplicationsTable, ApplicationsPage, Models}
-import io.evolutionary.koyo.ui.{ModelFragment, ModelAdapter}
+import io.evolutionary.koyo.ui.{ModelListFragment, ModelAdapter}
 import io.evolutionary.koyo.{Jobmine, R}
 import io.evolutionary.koyo.ui.common.BaseFragment
 
@@ -32,12 +32,12 @@ class ApplicationsFragment extends BaseFragment {
 }
 
 object MainPagerAdapter {
-  val makeApplicationView = (context: Context, model: Models.Application) => new ApplicationView(context, model)
+  val makeApplicationView = (context: Context) => new ApplicationView(context)
   val FragmentsInOrder: Seq[() => Fragment] = Seq(
-    () => new ModelFragment(ApplicationsPage <<< (_.filterKeys(_ == AllApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView),
-    () => new ModelFragment(ApplicationsPage <<< (_.filterKeys(_ == ActiveApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView)
+    () => new ModelListFragment(ApplicationsPage <<< (_.filterKeys(_ == ActiveApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView),
+    () => new ModelListFragment(ApplicationsPage <<< (_.filterKeys(_ == AllApplicationsTable)) >>> (_.sortBy(_.employer)), makeApplicationView)
   )
-  val FragmentTitlesInOrder: Seq[String] = Seq("All", "Active")
+  val FragmentTitlesInOrder: Seq[String] = Seq("Active", "All")
 }
 
 class MainPagerAdapter(fm: FragmentManager) extends FragmentPagerAdapter(fm) {

@@ -11,7 +11,7 @@ import io.evolutionary.koyo.parsing.Models
 import scala.collection.JavaConverters._
 import scala.util.Try
 
-class ModelAdapter[Model, V <: View with ModelView[Model]](context: Context, makeView: (Context, Model) => V)
+class ModelAdapter[Model, V <: View with ModelView[Model]](context: Context, makeView: (Context) => V)
   extends ArrayAdapter[Model](context, 0, new util.ArrayList[Model]()) {
   def models = (0 until getCount) map getItem
 
@@ -23,7 +23,7 @@ class ModelAdapter[Model, V <: View with ModelView[Model]](context: Context, mak
 
   override def getView(pos: Int, convertView: View, parent: ViewGroup): View = {
     val model = getItem(pos)
-    Option(convertView).fold(makeView(parent.getContext, model)) { cview =>
+    Option(convertView).fold(makeView(parent.getContext)) { cview =>
       val asAppView = cview.asInstanceOf[V]
       asAppView.updateModel(model)
       asAppView

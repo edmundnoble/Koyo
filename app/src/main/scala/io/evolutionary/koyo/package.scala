@@ -51,6 +51,9 @@ package object koyo {
       block()
   }
 
+  def hide(view: View): Unit = view.setVisibility(View.GONE)
+  def show(view: View): Unit = view.setVisibility(View.VISIBLE)
+
   def snackbar(text: String)(implicit activity: Activity): Unit =
     Snackbar.make(activity.getWindow.getDecorView.findView(android.R.id.content), text, Snackbar.LENGTH_SHORT).show()
 

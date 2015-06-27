@@ -8,7 +8,7 @@ import io.evolutionary.koyo.parsing.Models
 import io.evolutionary.koyo.parsing.Models.Application
 import io.evolutionary.koyo.ui.{FindViewForView, ModelView}
 
-class ApplicationView(ctx: Context, var application: Models.Application)
+class ApplicationView(ctx: Context)
   extends LinearLayout(ctx) with FindViewForView with ModelView[Models.Application] {
 
   private lazy val jobTitleView: TextView = findView(R.id.job_title)
@@ -18,7 +18,6 @@ class ApplicationView(ctx: Context, var application: Models.Application)
 
   View.inflate(ctx, R.layout.application_view, this)
   setOrientation(LinearLayout.VERTICAL)
-  updateModel(application)
 
   override def updateModel(m: Application): Unit = {
     jobTitleView.setText(m.jobTitle)
