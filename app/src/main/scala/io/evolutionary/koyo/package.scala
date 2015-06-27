@@ -14,6 +14,7 @@ import android.widget.{Toast, EditText, TextView}
 import com.squareup.okhttp.{ResponseBody, RequestBody, Response}
 import io.evolutionary.koyo.parsing.HtmlParser
 import org.jsoup.Jsoup
+import spire.util.Opt
 
 import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
@@ -28,6 +29,12 @@ package object koyo {
 
   implicit def toRunnable[T](block: () => T): Runnable = new Runnable {
     override def run(): Unit = block()
+  }
+
+  implicit class OptMap[K, V](m: Map[K, V]) extends AnyVal {
+    def getOpt(k: K): Opt[V] = {
+      Opt(m(k))
+    }
   }
 
   implicit def toOnClickListener[T](block: => T): OnClickListener = new OnClickListener {

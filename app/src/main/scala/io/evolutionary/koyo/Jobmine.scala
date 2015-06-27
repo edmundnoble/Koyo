@@ -11,8 +11,10 @@ import android.util.Log
 import com.squareup.mimecraft.FormEncoding
 import com.squareup.okhttp._
 import io.evolutionary.koyo.parsing.{TablePage, HtmlParser}
+import org.jsoup.nodes.Document
 
 import scala.concurrent.{Promise, Future}
+import scala.collection.mutable
 import scalaz.concurrent.{Strategy, Task}
 import java.io.IOException
 import scalaz._
@@ -34,21 +36,23 @@ object Jobmine {
     val Logout = new URL("https://jobmine.ccol.uwaterloo.ca/psp/SS/?cmd=login&languageCd=ENG&")
   }
 
-  def buildTablePageViews[T, P](page: TablePage[T, P])(implicit client: OkHttpClient): Task[Seq[T]] = {
+  def requestTablePageRows[T, P](page: TablePage[T, P])(implicit client: OkHttpClient): Task[Seq[T]] = {
     val request = new Request.Builder()
       .url(page.url)
       .get()
       .build()
-    asyncRequest(request) map { response =>
-      val html = response.body().html
-      val tables = page.tableNames.foldLeft(Map[P, Seq[Map[String, String]]]()) {
-        (acc, tableInfo) =>
-          val (tableType, tableName) = tableInfo
-          val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)
-          acc + (tableType -> (rowsMaybe getOrElse Seq.empty))
-      }
-      page.tablesToRows(tables)
+    asyncRequest(request) map { response => parseTablePageRows(response.body().html) }
+  }
+
+  def parseTablePageRows[R, T](page: TablePage[R, T], html: Document): Seq[R] = {
+    val tables = mutable.Map[page.RawTables]()
+    page.tableNames.foldLeft(()) {
+      (acc, tableInfo) =>
+        val (tableType, tableName) = tableInfo
+        val rowsMaybe = HtmlParser.makeRowsFromHtml(tableName, html)
+        tables += (tableType -> (rowsMaybe getOrElse Seq.empty))
     }
+    page.tablesToRows(tables)
   }
 
   def asyncRequest(request: Request)(implicit client: OkHttpClient): Task[Response] = {

@@ -34,7 +34,7 @@ class ModelFragment[Model, V <: View with ModelView[Model]](page: TablePage[Mode
     okHttpClient = Jobmine.makeUnsafeClient()
     adapter = new ModelAdapter[Model, V](getActivity, makeView)
     listView.setAdapter(adapter)
-    Jobmine.buildTablePageViews(page).runAsyncUi(parseActivityData)
+    Jobmine.requestTablePageRows(page).runAsyncUi(parseActivityData)
   }
 
   private def parseActivityData(res: Throwable \/ Seq[Model]): Unit = {
