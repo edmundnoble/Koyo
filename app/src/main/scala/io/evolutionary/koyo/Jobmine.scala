@@ -39,7 +39,6 @@ object Jobmine {
   def requestTablePageRows[T, P](page: TablePage[T, P])(implicit client: OkHttpClient): Task[Seq[T]] = {
     val request = new Request.Builder()
       .url(page.url)
-      .get()
       .build()
     asyncRequest(request) map { response => parseTablePageRows(page, response.body().html) }
   }

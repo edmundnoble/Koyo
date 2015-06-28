@@ -29,13 +29,17 @@ class ModelListFragment[Model, V <: View with ModelView[Model]](page: TablePage[
     progress = view.findView(R.id.progress)
     errorContainer = view.findView(R.id.error_container)
     listView = view.findView(R.id.model_list_view)
-
     adapter = new ModelAdapter[Model, V](getActivity, makeView)
-    Jobmine.requestTablePageRows(page).runAsyncUi(parseActivityData)
+    if (adapter != null) {
+      hide(progress)
+      listView.setAdapter(adapter)
+    } else {
+      Jobmine.requestTablePageRows(page).runAsyncUi(parseModelData)
+    }
     view
   }
 
-  private def parseActivityData(res: Throwable \/ Seq[Model]): Unit = {
+  private def parseModelData(res: Throwable \/ Seq[Model]): Unit = {
     hide(progress)
     res.fold({
       error: Throwable =>
