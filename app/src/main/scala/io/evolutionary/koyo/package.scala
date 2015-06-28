@@ -32,6 +32,12 @@ package object koyo {
     override def run(): Unit = block()
   }
 
+  case class LogTag(tag: String) extends AnyVal
+
+  def debug(str: => String)(implicit tag: LogTag) = {
+    if (BuildConfig.DEBUG)
+      Log.d(tag.tag, str)
+  }
 
   implicit def toOnClickListener[T](block: => T): OnClickListener = new OnClickListener {
     override def onClick(view: View): Unit = block
@@ -79,7 +85,6 @@ package object koyo {
           // This looks weird, doesn't it? Thanks to SI-1459 (and maybe another bug),
           // everything here has to be AnyRef.
           override def doInBackground(paramses: AnyRef*): AnyRef = {
-            Log.d("Package", "Doing something in the background...")
             cb(t.attemptRun)
             null
           }

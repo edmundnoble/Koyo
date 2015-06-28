@@ -16,6 +16,8 @@ import Scalaz._
 
 object Login {
 
+  implicit val tag = LogTag("Login")
+
   sealed trait LoginStatus
 
   case object LoggedIn extends LoginStatus
@@ -34,7 +36,7 @@ object Login {
   val MAX_LOGIN_ATTEMPTS = 3
 
   def login(username: String, password: String)(implicit client: OkHttpClient): Task[LoginStatus] = {
-    Log.d("Login", "Logging in...")
+    debug("Logging in...")
     val encoding = new FormEncodingBuilder()
       .add("submit", "Submit")
       .add("timezoneOffset", "480")
@@ -48,7 +50,7 @@ object Login {
       .build()
     if (username == "test") Task.delay(LoggedIn) // DONOTSHIP
     else Jobmine.asyncRequest(request) map { loginResponse =>
-      Log.d("Login", "Login complete!")
+      debug("Login complete!")
       val respString = loginResponse.body().string()
       if (respString contains FAILED_LOGIN_STRING) {
         if (respString contains LOGIN_OFFLINE_MESSAGE) {

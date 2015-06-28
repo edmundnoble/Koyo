@@ -18,6 +18,8 @@ import scalaz.std.option._
 
 class ModelListFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model, _], makeView: (Context) => V) extends BaseFragment {
 
+  implicit val tag = LogTag("ModelListFragment")
+
   private var progress: ProgressBar = _
   private var errorContainer: ViewGroup = _
   private var listView: ListView = _
@@ -30,9 +32,6 @@ class ModelListFragment[Model, V <: View with ModelView[Model]](page: TablePage[
     errorContainer = view.findView(R.id.error_container)
     listView = view.findView(R.id.model_list_view)
     if (adapter != null) {
-      val models = adapter.models
-      adapter = new ModelAdapter[Model, V](getActivity, makeView)
-      adapter.models = models
       hide(progress)
       listView.setAdapter(adapter)
       show(listView)
@@ -48,7 +47,7 @@ class ModelListFragment[Model, V <: View with ModelView[Model]](page: TablePage[
     res.fold({
       error: Throwable =>
         snackbar("There was an error fetching activity data!")(getActivity)
-        Log.d("ApplicationsFragment", s"Error fetching application data: ${error.allInfo}}")
+        debug(s"Error fetching application data: ${error.allInfo}}")
         show(errorContainer)
     }, {
       models: Seq[Model] =>

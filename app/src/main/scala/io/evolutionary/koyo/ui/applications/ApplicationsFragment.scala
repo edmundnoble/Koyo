@@ -1,4 +1,6 @@
-package io.evolutionary.koyo.ui.applications
+package io.evolutionary.koyo
+package ui
+package applications
 
 import android.content.Context
 import android.os.Bundle

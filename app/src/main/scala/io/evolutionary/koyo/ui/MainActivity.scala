@@ -49,6 +49,7 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
   }
 
   override def onNavigationItemSelected(menuItem: MenuItem): Boolean = {
+    drawerLayout.closeDrawer(Gravity.LEFT)
     val selectedPage = menuItem.getItemId
     if (selectedPage != currentPage) {
       swapFragment {
@@ -64,7 +65,6 @@ class MainActivity extends BaseActivity with NavigationView.OnNavigationItemSele
       menuItem.setChecked(!menuItem.isChecked)
     }
     currentPage = selectedPage
-    drawerLayout.closeDrawer(Gravity.LEFT)
     true
   }
 
