@@ -15,7 +15,7 @@ import io.evolutionary.koyo._
 import io.evolutionary.koyo.ui.MainActivity
 import io.evolutionary.koyo.ui.common.BaseActivity
 
-import scalaz._
+import scalaz.{-\/, \/-, \/}
 
 class LoginActivity extends BaseActivity {
 

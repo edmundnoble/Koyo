@@ -17,14 +17,17 @@ object JobSearchPage extends TablePage[Models.JobSearched, Unit] {
     val jobs = tables.values.flatMap(_.map {
       row =>
         for {
-          jobId <- row.get(Common.JobId).flatMap(_.parseInt)
+          jobId <- row.get(JobSearch.JobIdentifier).flatMap(_.parseInt)
           jobTitle <- row.get(Common.JobTitle)
           employer <- row.get(Common.Employer)
           jobStatus <- row.get(Common.JobStatus)
           openings <- row.get(JobSearch.Openings).flatMap(_.parseInt)
-          shortListed = ???
+          numApps <- row.get(JobSearch.NumApps).flatMap(_.parseInt)
+          shortListText <- row.get(JobSearch.ShortList)
+          shortListed = shortListText.isEmpty
+          location <- row.get(JobSearch.Location)
           unit <- row.get(JobSearch.UnitName)
-        } yield JobSearched(jobId, jobTitle, employer, jobStatus, openings, shortListed, unit)
+        } yield JobSearched(jobId, jobTitle, employer, numApps, openings, jobStatus, shortListed, unit)
     })
     jobs.flatten.toSeq
   }

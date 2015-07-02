@@ -25,15 +25,11 @@ class ApplicationsFragment extends BaseFragment {
     val view = inflater.inflate(R.layout.fragment_applications, container, false)
     viewPager = view.findView(R.id.pager)
     tabLayout = view.findView(R.id.tab_layout)
-    view
-  }
-
-  override def onActivityCreated(savedInstanceState: Bundle): Unit = {
-    super.onActivityCreated(savedInstanceState)
     def getColor(id: Int): Int = getResources.getColor(id)
     viewPager.setAdapter(new MainPagerAdapter(getChildFragmentManager))
     tabLayout.setTabTextColors(getColor(R.color.tab_text_inactive), getColor(R.color.tab_text_active))
     tabLayout.setupWithViewPager(viewPager)
+    view
   }
 }
 

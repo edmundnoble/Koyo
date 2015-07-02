@@ -1,7 +1,7 @@
 package io.evolutionary.koyo
 
 import com.squareup.okhttp.{OkHttpClient, FormEncodingBuilder, Request}
-import io.evolutionary.koyo.parsing.{JobSearchPage, Models}
+import io.evolutionary.koyo.parsing.{HtmlParser, JobSearchPage, Models}
 import org.jsoup.nodes.Document
 
 import scalaz.Writer
@@ -19,14 +19,14 @@ object JobSearch {
   val EmployerProperty = "UW_CO_JOBSRCH_UW_CO_EMPLYR_NAME"
   val TitleProperty = "UW_CO_JOBSRCH_UW_CO_JOB_TITLE"
 
-  case class Filter private[JobSearch] (pretty: String, jobmineValue: String)
+  case class Filter private[JobSearch](pretty: String, jobmineValue: String)
 
   val Approved = Filter("Approved", "APPR")
   val AppsAvail = Filter("Apps Avail", "APPA")
   val Cancelled = Filter("Cancelled", "CANC")
   val Posted = Filter("Posted", "POST")
 
-  case class JobType private[JobSearch] (asString: String, asJobmineId: Int)
+  case class JobType private[JobSearch](asString: String, asJobmineId: Int)
 
   val Coop = JobType("Co-op", 1)
   val CoopArch = JobType("Co-op ARCH", 2)
@@ -50,7 +50,7 @@ object JobSearch {
 
   val AllLevels = Set(JuniorLevel, IntermediateLevel, SeniorLevel, BachelorsLevel, MastersLevel, PhDLevel)
 
-  case class SearchParams(disciplines: Seq[String], term: String,
+  case class SearchParams(disciplines: Seq[Int], term: String,
                           location: String, filter: Filter, jobType: JobType,
                           employer: String, title: String, levels: Set[JobLevel])
 
@@ -58,23 +58,25 @@ object JobSearch {
 
   def getIcsid(html: Document): String = ""
 
-  def searchForJobs(params: SearchParams, stateNum: String, icsid: String)(implicit client: OkHttpClient): Task[Document] = {
+  def searchForJobs(params: SearchParams, stateNum: String, icsid: String)(implicit client: OkHttpClient): Task[Seq[Models.JobSearched]] = {
     val requestBodyBuilder = new FormEncodingBuilder()
     val nonRequestedLevels = AllLevels diff params.levels
-    nonRequestedLevels.foreach(level => requestBodyBuilder.add(level.jobmineProperty, "N"))
-    params.levels.foreach(level => requestBodyBuilder.add(level.jobmineProperty, "Y"))
-    val requestBody = requestBodyBuilder.add("ICAction", "UW_CO_JOBSRCHDW_UW_CO_DW_SRCHBTN")
+    val disciplinesZipped = DisciplinesProperties.zip(params.disciplines)
+    requestBodyBuilder
+      .add("ICAction", "UW_CO_JOBSRCHDW_UW_CO_DW_SRCHBTN")
       .add("ICElementNum", "0")
       .add("ICAJAX", "1")
-      .add("ICStateNum", stateNum)
-      .add("ICSID", icsid)
       .add(LocationProperty, params.location)
       .add(JobTypeProperty, params.jobType.asJobmineId.toString)
       .add(FilterProperty, params.filter.jobmineValue)
       .add(TermProperty, params.term)
+      .add(EmployerProperty, params.employer)
       .add(TitleProperty, params.title)
-      .build()
+    disciplinesZipped.foreach { case (property, value) => requestBodyBuilder.add(property, value.toString) }
+    nonRequestedLevels.foreach(level => requestBodyBuilder.add(level.jobmineProperty, "N"))
+    params.levels.foreach(level => requestBodyBuilder.add(level.jobmineProperty, "Y"))
 
+    val requestBody = requestBodyBuilder.build()
     val request = new Request.Builder()
       .url(Jobmine.Links.JobSearch)
       .post(requestBody)
@@ -82,7 +84,8 @@ object JobSearch {
 
     Jobmine.asyncRequest(request) map { response =>
       val html = response.body().html
-      html
+      val rows = Jobmine.parseTablePageRows(JobSearchPage, html)
+      rows
     }
   }
 }

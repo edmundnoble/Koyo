@@ -15,10 +15,9 @@ import org.jsoup.nodes.Document
 
 import scala.concurrent.{Promise, Future}
 import scala.collection.mutable
+import scalaz.{\/-, -\/}
 import scalaz.concurrent.{Strategy, Task}
 import java.io.IOException
-import scalaz._
-import Scalaz._
 
 object Jobmine {
 

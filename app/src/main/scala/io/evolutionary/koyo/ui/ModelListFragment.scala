@@ -12,9 +12,7 @@ import io.evolutionary.koyo._
 import io.evolutionary.koyo.parsing.{InterviewsPage, TablePage, ApplicationsPage, Models}
 import io.evolutionary.koyo.ui.common.BaseFragment
 
-import scalaz._
-import Scalaz._
-import scalaz.std.option._
+import scalaz.\/
 
 class ModelListFragment[Model, V <: View with ModelView[Model]](page: TablePage[Model, _], makeView: (Context) => V) extends BaseFragment {
 

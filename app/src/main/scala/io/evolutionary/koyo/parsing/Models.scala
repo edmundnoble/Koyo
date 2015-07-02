@@ -8,8 +8,8 @@ object Models {
                          unit: String, term: String, appStatus: String, lastDayToApply: String,
                          numApps: Int)
 
-  case class JobSearched(jobId: Int, jobTitle: String, employer: String, jobStatus: String,
-                         openings: Int, shortListed: Boolean, unit: String)
+  case class JobSearched(jobId: Int, jobTitle: String, employer: String, numApps: Int, openings: Int, jobStatus: String,
+                         shortListed: Boolean, unit: String)
 
   case class Interview(jobId: Int, jobTitle: String, employerName: String, interviewType: String,
                        interviewDate: Option[Date], startTime: Option[Date], endTime: Option[Date],

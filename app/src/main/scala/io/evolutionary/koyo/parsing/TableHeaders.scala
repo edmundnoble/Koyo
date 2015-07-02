@@ -1,6 +1,4 @@
 package io.evolutionary.koyo.parsing
-import scalaz._
-import Scalaz._
 
 object TableHeaders {
 
@@ -46,7 +44,10 @@ object TableHeaders {
   object JobSearch {
     val Openings = "Openings"
     val ShortList = "Short List"
-    val UnitName = "Unit"
+    val UnitName = "Unit Name"
+    val JobIdentifier = "Job Identifier"
+    val Location = "Location"
+    val NumApps = "# Apps"
   }
 
   object Rankings {

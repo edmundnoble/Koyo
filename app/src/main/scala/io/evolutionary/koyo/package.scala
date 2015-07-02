@@ -20,9 +20,8 @@ import spire.util.Opt
 import scala.concurrent.ExecutionContext
 import scala.language.implicitConversions
 import scala.util.Try
+import scalaz.{-\/, \/}
 import scalaz.concurrent.{Task, Strategy}
-import scalaz._
-import Scalaz._
 import java.io.{PrintWriter, StringWriter}
 
 package object koyo {
@@ -89,7 +88,7 @@ package object koyo {
             null
           }
 
-          override def onCancelled(): Unit = cb(new RuntimeException().left[T])
+          override def onCancelled(): Unit = cb(-\/(new RuntimeException()))
         }.execute()
       }
     }

@@ -11,10 +11,8 @@ import io.evolutionary.koyo.ui.common.BaseActivity
 import io.evolutionary.koyo.ui.login.LoginActivity
 import spire.util.Opt
 
-import scalaz._
-import scalaz.std.option._
-import Scalaz._
-import scalaz.concurrent.Task
+import scala.reflect.ClassTag
+import scalaz.{\/-, -\/, \/}
 
 class SplashActivity extends BaseActivity {
 
@@ -29,14 +27,15 @@ class SplashActivity extends BaseActivity {
     cookieMan.setCookiePolicy(CookiePolicy.ACCEPT_ALL)
     CookieHandler.setDefault(cookieMan)
     credentials.fold {
-      startActivityAfterTimeout(classOf[LoginActivity])
+      startActivityAfterTimeout[LoginActivity]()
     } {
       case (username, password) =>
         Login.login(username, password).runAsync(res => runOnMainThread(() => parseLoginResult(res)))
     }
   }
 
-  private def startActivityAfterTimeout(clazz: Class[_ <: Activity]): Unit = {
+  private def startActivityAfterTimeout[T <: Activity]()(implicit tag: ClassTag[T]): Unit = {
+    val clazz = tag.runtimeClass
     val currentTimeMs = System.currentTimeMillis()
     val dt = currentTimeMs - activityStartMs
     if (dt < SPLASH_TIMEOUT) {
@@ -50,18 +49,18 @@ class SplashActivity extends BaseActivity {
     result match {
       case -\/(ex) =>
         snackbar("There was a problem logging in")
-        startActivityAfterTimeout(classOf[LoginActivity])
+        startActivityAfterTimeout[LoginActivity]()
       case \/-(res) =>
         res match {
           case Login.LoggedIn =>
             snackbar("Logged in!")
-            startActivityAfterTimeout(classOf[MainActivity])
+            startActivityAfterTimeout[MainActivity]()
           case Login.LoggedOut =>
             snackbar("There was a problem logging in")
-            startActivityAfterTimeout(classOf[LoginActivity])
+            startActivityAfterTimeout[LoginActivity]()
           case Login.Offline =>
             snackbar("Jobmine is offline! Please try again later.")
-            startActivityAfterTimeout(classOf[LoginActivity])
+            startActivityAfterTimeout[LoginActivity]()
         }
     }
   }

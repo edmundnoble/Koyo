@@ -11,8 +11,6 @@ import com.squareup.okhttp._
 import scala.concurrent.Future
 import scalaz.concurrent.{Strategy, Task}
 import java.io.IOException
-import scalaz._
-import Scalaz._
 
 object Login {
 
@@ -59,6 +57,9 @@ object Login {
           LoggedOut
         }
       } else {
+        import JobSearch._
+        searchForJobs(SearchParams(Seq(90), "1159", "", Approved, Coop, "", "",
+          Set(JuniorLevel, IntermediateLevel, SeniorLevel)), "", "").runAsync(println)
         LoggedIn
       }
     }

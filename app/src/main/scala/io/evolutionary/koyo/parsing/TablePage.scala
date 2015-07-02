@@ -4,9 +4,6 @@ import java.net.URL
 
 import android.view.View
 
-import scalaz._
-import Scalaz._
-
 trait TablePage[RowModel, TableType] { self =>
 
   type RawRow = Map[String, String]

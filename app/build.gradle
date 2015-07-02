@@ -61,4 +61,5 @@ tasks.withType(ScalaCompile) {
     scalaCompileOptions.setUseCompileDaemon(true)
     // Additional parameters
     scalaCompileOptions.setAdditionalParameters(["-feature"])
+    scalaCompileOptions.useAnt = false
 }
