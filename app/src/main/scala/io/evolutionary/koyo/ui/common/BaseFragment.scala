@@ -10,14 +10,14 @@ import io.evolutionary.koyo.Jobmine
 
 class BaseFragment extends Fragment {
 
-  implicit def context: Context = getActivity
+  implicit def context: Context = getContext
 
   protected implicit var okHttpClient: OkHttpClient = _
 
   protected def findView[T <: View](view: View, id: Int): T = view.findViewById(id).asInstanceOf[T]
 
-  override def onAttach(activity: Activity): Unit = {
-    super.onAttach(activity)
+  override def onAttach(context: Context): Unit = {
+    super.onAttach(context)
     okHttpClient = Jobmine.makeUnsafeClient()
   }
 }

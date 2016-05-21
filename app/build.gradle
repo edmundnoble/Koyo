@@ -60,6 +60,6 @@ tasks.withType(ScalaCompile) {
     // If you want to use scala compile daemon
     scalaCompileOptions.setUseCompileDaemon(true)
     // Additional parameters
-    scalaCompileOptions.setAdditionalParameters(["-feature"])
+    scalaCompileOptions.setAdditionalParameters(["-feature","-Xexperimental"])
     scalaCompileOptions.useAnt = false
 }

@@ -69,7 +69,7 @@ object Jobmine {
     }
   }
 
-  def makeUnsafeClient()(implicit context: Context): OkHttpClient = {
+  def makeUnsafeClient(): OkHttpClient = {
     val okHttpClient = new OkHttpClient()
     okHttpClient.setConnectTimeout(5L, TimeUnit.SECONDS)
     okHttpClient.setReadTimeout(5L, TimeUnit.SECONDS)
